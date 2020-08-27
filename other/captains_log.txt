@@ -1,0 +1,84 @@
+PROGRAM SPECS :
+______________________________________________________________
+
+av[1] = nb of philosophers
+av[2] = time to die
+av[3] = time to eat
+av[4] = time to sleep
+    av[5] = nb of times philosophers must eat
+
+1 thread = 1 philosophe
+Mutex pour les fourchettes
+______________________________________________________________
+
+C'est quoi un mutex ??
+= objet d'exclusion mutuelle (MUTual EXclusion). Peut être dans deux états : 
+- déverrouillé (pris par aucun thread)
+- verrouillé (appartenant à un thread)
+Un thread qui tente de verrouiller un mutex déjà verrouillé est suspendu 
+jusqu'à ce que le mutex soit déverrouillé
+
+************************
+*   MAN DES FONCTIONS  *
+************************
+        TIME :
+*****************************************************
+-> USLEEP
+usleep(microseconds)
+    > suspend l'execution d'un thread jusqu'a ce que le temps soit écoulé
+    ou qu'un signal soit délivré
+*****************************************************
+-> GETTIMEOFDAY
+gettimeofday(struct timeval *restrict tp, void *restrict tzp)
+The structures pointed to by tp and tzp are defined in <sys/time.h> as:
+struct timeval {
+    time_t       tv_sec;   /* seconds since Jan. 1, 1970 */
+    suseconds_t  tv_usec;  /* and microseconds */ };
+struct timezone {
+    int     tz_minuteswest; /* of Greenwich */
+    int     tz_dsttime;     /* type of dst correction to apply */};
+*****************************************************
+        THREADS :
+*****************************************************
+-> PTHREAD_CREATE
+pthread_create(pthread_t *thread, const pthread_attr_t *attr, 
+    void *(*start_routine)(void *), void *arg)
+> crée un thread dans un process :
+    - avec les attributs 'attr' (if NULL, defaults)
+    - stocke l'ID du thread dans 'thread'
+    - execute la fonction 'start_routine' avec 'arg' pour arguments
+*****************************************************
+-> PTHREAD_DETACH
+pthread_detach(pthread_t thread)
+> indique que l'espace memoire du thread peut etre réaffecté une fois
+que le thread aura terminé
+*****************************************************
+-> PTHREAD_JOIN
+pthread_join(pthread_t thread, void **value_ptr)
+> suspend l'execution du thread appelant jusqu'a ce que le thread cible 
+termine, et stocke la valeur de retour dans 'value_ptr' (passé non nul)
+*****************************************************
+        MUTEX :
+*****************************************************
+-> PTHREAD_MUTEX_INIT
+pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *mutexattr)
+> initialise le mutex sur 'mutex' avec les attributs 'mutexattr'
+On a le choix entre :
+- fastmutex = PTHREAD_MUTEX_INITIALIZER
+- recmutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
+- errchkmutex = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP
+*****************************************************
+-> PTHREAD_MUTEX_DESTROY
+pthread_mutex_destroy(pthread_mutex_t *mutex)
+> détruit un mutex (doit etre déverrouillé)
+*****************************************************
+-> PTHREAD_MUTEX_LOCK
+pthread_mutex_lock(pthread_mutex_t *mutex))
+> tente de verrouiller le mutex pour le thread appelant.
+S'il est verrouillé par un autre thread, il attend qu'il se libère.
+*****************************************************
+-> PTHREAD_MUTEX_UNLOCK
+pthread_mutex_unlock(pthread_mutex_t *mutex)
+> déverrouille un mutex
+*****************************************************
+
