@@ -6,47 +6,64 @@
 /*   By: lemarabe <lemarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 18:30:38 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/08/27 21:03:05 by lemarabe         ###   ########.fr       */
+/*   Updated: 2020/08/27 22:45:29 by lemarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-int parse_error(char *str)
+void *philo_routine(void *arg)
 {
-    write(2, str, ft_strlen(str));
-    exit(1);
+    struct timeval *tp;
+    
+    if (!(tp = malloc(sizeof(struct timeval))))
+        return (NULL);
+    write(1, "yo\n", 3);
+    gettimeofday(tp, NULL);
+    printf("my arg is %d characters long\n", ft_strlen(arg));
+    printf("the time is : %ld and %d\n", tp->tv_sec, tp->tv_usec);
+    return (tp);
 }
 
-char *check_args(char **av, t_time *time)
+char *check_args(int ac, char **av, t_philo *philo)
 {
-    if (av[1] < 2)
+    if (!(ac == 5 || ac == 6))
+        return ("Wrong number of parameters !");
+    if (ft_atoi_ulong(av[1]) < 2)
         return ("You should have more than 1 philosopher !");
-    time->nb_philo = av[1];
-    if (av[2] <= 0)
+    philo->nb_philo = ft_atoi_ulong(av[1]);
+    if (ft_atoi_ulong(av[2]) <= 0)
         return ("Time to die must be a strictly positive number !");
-    time->to_die = av[2];
-    if (av[3] <= 0)
+    philo->to_die = ft_atoi_ulong(av[2]);
+    if (ft_atoi_ulong(av[3]) <= 0)
         return ("Time to eat must be a strictly positive number !");
-    time->to_eat = av[3];
-    if (av[4] <= 0)
+    philo->to_eat = ft_atoi_ulong(av[3]);
+    if (ft_atoi_ulong(av[4]) <= 0)
         return ("Time to sleep must be a strictly positive number !");
-    time->to_sleep = av[4];
+    philo->to_sleep = ft_atoi_ulong(av[4]);
     if (av[5])
     {
-        if (av[5] <= 0)
+        if (ft_atoi_ulong(av[5]) <= 0)
             return ("Number of rounds must be a strictly positive number !");
-        time->laps = av[5];
+        philo->nb_laps = ft_atoi_ulong(av[5]);
     }
     return (NULL);
 }
 
 int main(int ac, char **av)
 {
-    t_time time;
-    char *err;
+    t_philo philo;
+    char    *err;
+    pthread_t thread;
+//    struct timeval    *tp = NULL;
+    void *ptr;
     
-    if ((err = check_args(av, &time)) && err)
+    if ((err = check_args(ac, av, &philo)) && err)
         return (parse_error(err));
-    
+    printf("hi thread\n");
+    pthread_create(&thread, NULL, &philo_routine, "test arguments");
+    pthread_detach(thread);
+    pthread_join(thread, &ptr);
+    printf("bye thread\n");
+    return (0);
 }

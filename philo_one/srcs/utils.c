@@ -6,7 +6,7 @@
 /*   By: lemarabe <lemarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 18:54:24 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/08/27 19:05:29 by lemarabe         ###   ########.fr       */
+/*   Updated: 2020/08/27 21:59:59 by lemarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,22 @@ int ft_strlen(char *str)
     while (str[i])
         i++;
     return (i);
+}
+
+unsigned long ft_atoi_ulong(char *str)
+{
+    unsigned long out;
+    int i;
+    
+    i = 0;
+    out = 0;
+    while (str[i] && str[i] <= '9' && str[i] >= '0')
+        out = out * 10 + str[i++] - '0';
+    return (out);
+}
+
+int parse_error(char *str)
+{
+    write(2, str, ft_strlen(str));
+    exit(1);
 }

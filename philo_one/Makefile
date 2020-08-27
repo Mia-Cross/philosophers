@@ -2,16 +2,15 @@ NAME = philo_one
 
 SRCDIR = srcs
 OBJDIR = .obj
-INCDIR = include
 
 SRCS = 	philo_one.c \
 		utils.c
 
 OBJS =		$(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
-INCLUDES =	philo_one.h
+INCLUDES =	-I include/
 DPDCS =		$(OBJS:.o=.d)
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 
 opti:
 	@make -j all
@@ -27,7 +26,7 @@ $(NAME) : $(OBJS)
 	@echo Compiled $(NAME) successfully !
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.c | $(OBJDIR)
-	gcc $(CFLAGS) -c $< -o $@
+	gcc $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(OBJDIR) :
 	@mkdir -p .obj
