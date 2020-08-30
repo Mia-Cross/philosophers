@@ -23,13 +23,22 @@
 
 typedef struct timeval t_timeval;
 
+typedef struct s_time
+{
+    time_t  	to_die;
+    time_t  	to_eat;
+    time_t  	to_sleep;
+	t_timeval	start;
+	t_timeval	*death;
+}				t_time;
+
 typedef struct s_args
 {
+	int nb_philo;
+	t_time	time;
     int     philo_num;
-    time_t  to_die;
-    time_t  to_eat;
-    time_t  to_sleep;
     int     nb_laps;
+	pthread_mutex_t *fork;
 }              t_args;
 
 int ft_strlen(char *str);
@@ -37,12 +46,15 @@ int parse_error(char *str);
 void ft_putunsigned_long(time_t nbr);
 unsigned long ft_atoi_ulong(char *str);
 
-t_timeval get_new_death_time(t_timeval ref, time_t time_to_die);
-void display_action(t_timeval ref, int philo, char *action);
-t_timeval get_new_death_time(t_timeval ref, time_t time_to_die);
-int is_alive(t_timeval death_time);
-void philosopher_eats(t_timeval exec_time, time_t time_to_eat, int philo_num);
-void philosopher_sleeps(t_timeval exec_time, time_t time_to_sleep, int philo_num);
-void philosopher_thinks(t_timeval exec_time, time_t time_to_die, int philo_num);
+void update_death_clock(t_time *time, int philo_num);
+void display_action(t_timeval start, int philo, char *action);
+time_t get_time_since_start(t_timeval start);
+int philosopher_sleeps(t_args *args);
+int philosopher_eats(t_args *args);
+void philosopher_thinks(t_args *args);
+int check_death_clock(t_timeval death_time);
+//void philosopher_eats(t_timeval exec_time, time_t time_to_eat, int philo_num);
+//void philosopher_sleeps(t_timeval exec_time, time_t time_to_sleep, int philo_num);
+//void philosopher_thinks(t_timeval exec_time, time_t time_to_die, int philo_num);
 
 #endif

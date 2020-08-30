@@ -1,14 +1,14 @@
 NAME = philo_one
 
-SRCDIR = srcs
-OBJDIR = .obj
+SRCDIR =	srcs
+OBJDIR =	.obj
+INCLUDES =	-I include/
 
 SRCS = 	philo_one.c \
-		utils.c
-
-OBJS =		$(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
-INCLUDES =	-I include/
-DPDCS =		$(OBJS:.o=.d)
+		utils.c \
+		time.c
+OBJS =	$(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
+DPDCS =	$(OBJS:.o=.d)
 
 CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 

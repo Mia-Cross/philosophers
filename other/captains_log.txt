@@ -7,9 +7,8 @@ av[3] = time to eat
 av[4] = time to sleep
     av[5] = nb of times philosophers must eat
 
-1 thread = 1 philosophe
-Mutex pour les fourchettes
-______________________________________________________________
+1 philosophe = 1 thread
+1 fourchette = 1 mutex
 
 EVENTS TO BE DISPLAYED :
 timestamp_in_ms X has taken a fork
@@ -17,10 +16,21 @@ timestamp_in_ms X is eating
 timestamp_in_ms X is sleeping
 timestamp_in_ms X is thinking
 timestamp_in_ms X died
+______________________________________________________________
 
 
-EXEMPLE DU MAGASIN :
+POURQUOI LE +1 DANS PHILO_NUM ??
 
+DISPLAY LA MORT DANS LE RETURN AVEC DEATH_CLOCK ET PAS NOW
+
+SI CA MARCHE PAS, ESSAYER DE FAIRE UN MUTEX** AU LIEU D'UN MUTEX*
+
+AUSSI Y'A MOYEN QUE MA STRUCTURE SOIT PARTAGEE PAR TOUS LES PHILOS;
+
+
+
+///////////////////////////////////////////////////////////////////////////
+LES THREADS -- EXEMPLE DU MAGASIN :
 * Dans le main :
 1) création du thread du magasin
 2) création d'un thread par client avec une boucle while
@@ -30,13 +40,16 @@ EXEMPLE DU MAGASIN :
 Dans une boucle infinie, si le stock passe a 0 on le recharge.
 * Routine des clients :
 Dans une boucle infinie, le client se sert un nb random dans le stock.
-
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+LES MUTEX :
 C'est quoi un mutex ??
 = objet d'exclusion mutuelle (MUTual EXclusion). Peut être dans deux états : 
 - déverrouillé (pris par aucun thread)
 - verrouillé (appartenant à un thread)
 Un thread qui tente de verrouiller un mutex déjà verrouillé est suspendu 
 jusqu'à ce que le mutex soit déverrouillé
+///////////////////////////////////////////////////////////////////////////
+
 
 ************************
 *   MAN DES FONCTIONS  *
