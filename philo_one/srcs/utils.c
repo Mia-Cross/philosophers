@@ -6,64 +6,28 @@
 /*   By: lemarabe <lemarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 18:54:24 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/08/30 20:45:44 by lemarabe         ###   ########.fr       */
+/*   Updated: 2020/08/31 20:36:37 by lemarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-void display_action(t_timeval start, int philo, char *action)
+int clean_and_exit(t_args *args, int to_free, char *str)
 {
-    ft_putunsigned_long(get_time_since_start(start));
-    write(1, "ms -> ", 6);
-    ft_putunsigned_long(philo);
-    write(1, " ", 1);
-    write(1, action, ft_strlen(action));
-}
-
-int philosopher_eats(t_args *args)
-{
-	if (check_death_clock(args->time.death[args->philo_num]))
-	{
-    	display_action(args->time.start, args->philo_num, "died before eating\n");
-        return (0);
+    if (to_free)
+    {
+        free(args->thread_tab);
+        if (to_free > 1)
+        {
+            free(args->fork_tab);
+            if (to_free > 2)
+                free(args->philo);
+        }
     }
-	pthread_mutex_lock(&args->fork[args->philo_num]);
-	display_action(args->time.start, args->philo_num, "has taken a fork\n");
-	pthread_mutex_lock(&args->fork[(args->philo_num) + 1]);
-	display_action(args->time.start, args->philo_num, "has taken a fork\n");
-    update_death_clock(&args->time, args->philo_num);
-	display_action(args->time.start, args->philo_num, "is eating\n");
-	usleep(args->time.to_eat);
-	pthread_mutex_unlock(&args->fork[args->philo_num]);
-	pthread_mutex_unlock(&args->fork[(args->philo_num) + 1]);
-	if (check_death_clock(args->time.death[args->philo_num]))
-	{
-    	display_action(args->time.start, args->philo_num, "died after eating\n");
-        return (0);
-    }
-	return (1);
+    write(2, str, ft_strlen(str));
+    write(2, "\n", 1);
+    exit(1);
 }
-
-int philosopher_sleeps(t_args *args)
-{
-    display_action(args->time.start, args->philo_num, "is sleeping\n");
-    usleep(args->time.to_sleep);
-	if (check_death_clock(args->time.death[args->philo_num]))
-	{
-    	display_action(args->time.start, args->philo_num, "died after sleeping\n");
-        return (0);
-    }
-	return (1);
-}
-
-void philosopher_thinks(t_args *args)
-{
-    display_action(args->time.start, args->philo_num, "is thinking\n");
-//    while (fork_is_not_available)
-//        usleep(1);
-}
-
 
 int ft_strlen(char *str)
 {
@@ -87,14 +51,7 @@ unsigned long ft_atoi_ulong(char *str)
     return (out);
 }
 
-int parse_error(char *str)
-{
-    write(2, str, ft_strlen(str));
-    write(2, "\n", 1);
-    exit(1);
-}
-
-void ft_putunsigned_long(time_t nbr)
+/*void ft_putunsigned_long(time_t nbr)
 {
 	char c;
 
@@ -102,4 +59,77 @@ void ft_putunsigned_long(time_t nbr)
 		ft_putunsigned_long((nbr / 10));
 	c = nbr % 10 + '0';
 	write(1, &c, 1);
+} */
+
+
+
+
+static int		nbr_len(unsigned long p)
+{
+	int		i;
+
+    if (p == 0)
+        return (1);
+	i = 0;
+	while (p)
+	{
+		p = p / 10;
+		i++;
+	}
+	return (i);
+}
+
+static char		*ft_strrev(char *str)
+{
+	int		i;
+	int		j;
+	char	c;
+
+	i = 0;
+	j = 0;
+	while (str[i])
+		i++;
+	i--;
+	while (i > j)
+	{
+		c = str[i];
+		str[i] = str[j];
+		str[j] = c;
+		i--;
+		j++;
+	}
+	return (str);
+}
+
+static char		*print_nbr(char *str, unsigned long p, int n_len)
+{
+	int		i;
+
+	i = 0;
+	while (p)
+	{
+		str[i] = p % 10 + '0';
+		p = p / 10;
+		i++;
+	}
+	str[n_len] = 0;
+	return (str);
+}
+
+char			*ft_itoa(unsigned long nbr)
+{
+	char	*str;
+	int		n_len;
+
+	n_len = nbr_len(nbr);
+	if (!(str = (char *)malloc(sizeof(char) * (n_len + 1))))
+		return (NULL);
+	else if (nbr == 0)
+	{
+		str[0] = '0';
+		str[1] = '\0';
+		return (str);
+	}
+	str = print_nbr(str, nbr, n_len);
+	return (ft_strrev(str));
 }

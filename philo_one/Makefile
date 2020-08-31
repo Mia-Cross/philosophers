@@ -6,7 +6,8 @@ INCLUDES =	-I include/
 
 SRCS = 	philo_one.c \
 		utils.c \
-		time.c
+		time.c \
+		actions.c
 OBJS =	$(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 DPDCS =	$(OBJS:.o=.d)
 

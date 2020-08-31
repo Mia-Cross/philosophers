@@ -6,7 +6,7 @@
 /*   By: lemarabe <lemarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 18:30:38 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/08/30 20:45:10 by lemarabe         ###   ########.fr       */
+/*   Updated: 2020/08/31 20:49:59 by lemarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,15 @@
 
 void *philo_routine(void *arg)
 {
-    t_args *args;
+    t_philo *philo;
 
-    args = (t_args *)arg;
-    gettimeofday(&args->time.start, NULL);
+    philo = (t_philo *)arg;
     while (1)
     {
-		update_death_clock(&args->time, args->philo_num);
-        if (!philosopher_eats(args))
-			return (NULL);
-		if (!philosopher_sleeps(args))
-			return (NULL);
-		philosopher_thinks(args);
+		update_death_clock(&philo->death, philo->time->to_die);
+        philosopher_eats(philo);
+		philosopher_sleeps(philo);
+		philosopher_thinks(philo);
     }
     return (NULL);
 }
@@ -55,43 +52,60 @@ char *check_args(int ac, char **av, t_args *args)
     return (NULL);
 }
 
+void start_mutexes(t_args *args)
+{
+    int i;
+
+    i = 0;
+    while (i < args->nb_philo)
+        pthread_mutex_init(&args->fork_tab[i++], NULL);
+}
+
+void start_threads(t_args *args)
+{
+    int i;
+
+    i = 0;
+	while (i < args->nb_philo - 1)
+	{
+        args->philo[i].num = i;
+        args->philo[i].name = i + 1;
+        args->philo[i].time = &args->time;
+        args->philo[i].fork_left = &args->fork_tab[i];
+        args->philo[i].fork_right = &args->fork_tab[i + 1];
+		pthread_create(&args->thread_tab[i], NULL, &philo_routine, &args->philo[i]);
+        i++;
+	}
+    args->philo[i].num = i;
+    args->philo[i].name = i + 1;
+    args->philo[i].time = &args->time;
+    args->philo[i].fork_left = &args->fork_tab[i];
+    args->philo[i].fork_right = &args->fork_tab[0];
+	pthread_create(&args->thread_tab[i], NULL, &philo_routine, &args->philo[i]);
+}
+
 int main(int ac, char **av)
 {
-    pthread_t   *thread_tab;
-    t_args      args;
-    char        *err;
-    int         i;
+    t_args  args;
+    char    *err;
+    int     i;
+    void    *value_ptr;
 
 	if ((err = check_args(ac, av, &args)) && err)
-		return (parse_error(err));
-	if (!(thread_tab = malloc(sizeof(pthread_t) * args.nb_philo)))
-		return (parse_error("Malloc in thread_tab failed..."));
-	if (!(args.fork = malloc(sizeof(pthread_mutex_t) * args.nb_philo)))
-	{
-		free(thread_tab);
-		return (parse_error("Malloc in forks mutex failed..."));
-	}
-	if (!(args.time.death = malloc(sizeof(t_timeval) * args.nb_philo)))
-	{
-		free(thread_tab);
-		free(args.fork);
-		return (parse_error("Malloc in forks mutex failed..."));
-	}
+		clean_and_exit(&args, 0, err);
+	if (!(args.thread_tab = malloc(sizeof(pthread_t) * args.nb_philo)))
+		clean_and_exit(&args, 0, "Malloc in thread_tab failed...");
+	if (!(args.fork_tab = malloc(sizeof(pthread_mutex_t) * args.nb_philo)))
+		clean_and_exit(&args, 1, "Malloc in forks_tab failed...");
+    if (!(args.philo = malloc(sizeof(t_philo) * args.nb_philo)))
+		clean_and_exit(&args, 2, "Malloc in philo_tab failed...");
+    gettimeofday(&args.time.start, NULL);
+    start_mutexes(&args);
+    start_threads(&args);
 	i = 0;
-	while (i < args.nb_philo)
-		pthread_mutex_init(&args.fork[i++], NULL);
-	i = 0;
-	while (i < args.nb_philo)
-	{
-		args.philo_num = i;
-		pthread_create(&thread_tab[i], NULL, &philo_routine, &args);
-		i++;
-	}
-	i = 0;
-	while (i < args.nb_philo)
-		pthread_join(thread_tab[i++], NULL);
-	free(thread_tab);
-	free(args.fork);
-	free(args.time.death);
+    value_ptr = (void *)666;
+	while (value_ptr == (void *)666 && i < args.nb_philo)           // a mon avis faut qu'il attende que le premier
+        pthread_join(args.thread_tab[i++], &value_ptr);   //genre while ptr == NULL
+	clean_and_exit(&args, 3, "");
 	return (0);
 }
