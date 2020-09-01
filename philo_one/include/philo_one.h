@@ -34,11 +34,11 @@ typedef struct s_time
 typedef struct  s_philo
 {
     int         num;
-    int         name;
     t_time      *time;
     t_timeval   death;
     pthread_mutex_t *fork_left;
     pthread_mutex_t *fork_right;
+//	int 		*display[4];
 }               t_philo;
 
 typedef struct s_args
@@ -58,7 +58,9 @@ char			*ft_itoa(unsigned long nbr);
 
 int clean_and_exit(t_args *args, int to_free, char *str);
 void update_death_clock(t_timeval *death, time_t to_die);
-void display_action(t_timeval start, int philo, char *action);
+void display_action(t_timeval start, int *num, char *action);
+//void display_action(int **disp, t_timeval start, char *action);
+//void display_action(t_timeval start, int philo, char *action);
 time_t get_time_since_start(t_timeval start);
 void philosopher_sleeps(t_philo *philo);
 void philosopher_eats(t_philo *philo);

@@ -69,7 +69,7 @@ static int		nbr_len(unsigned long p)
 	int		i;
 
     if (p == 0)
-        return (1);
+		return (1);
 	i = 0;
 	while (p)
 	{

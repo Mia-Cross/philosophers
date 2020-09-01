@@ -17,12 +17,12 @@ void *philo_routine(void *arg)
     t_philo *philo;
 
     philo = (t_philo *)arg;
+	update_death_clock(&philo->death, philo->time->to_die);
     while (1)
     {
-		update_death_clock(&philo->death, philo->time->to_die);
+		philosopher_thinks(philo);
         philosopher_eats(philo);
 		philosopher_sleeps(philo);
-		philosopher_thinks(philo);
     }
     return (NULL);
 }
@@ -61,27 +61,46 @@ void start_mutexes(t_args *args)
         pthread_mutex_init(&args->fork_tab[i++], NULL);
 }
 
+/*void prepare_display(int **disp, int i)
+{
+//	if (!(disp = malloc(4)))
+//		exit(0);
+	memset(&disp[0], 0, 1);
+	memset(&disp[1], ' ', 1);
+	memset(&disp[2], (i + 1), 1);
+	memset(&disp[3], ' ', 1);
+} */
+
+void prepare_threads(t_args *args)
+{
+	int i;
+
+    i = -1;
+	while (++i < args->nb_philo - 1)
+	{
+		memset(&args->philo[i], 0, sizeof(t_philo));
+	//	prepare_display(args->philo->display, i);
+        args->philo[i].num = i + 1;
+        args->philo[i].time = &args->time;
+        args->philo[i].fork_left = &args->fork_tab[i];
+        args->philo[i].fork_right = &args->fork_tab[i + 1];
+	}
+	memset(&args->philo[i], 0, sizeof(t_philo));
+//	prepare_display(args->philo->display, i);
+    args->philo[i].num = i + 1;
+    args->philo[i].time = &args->time;
+    args->philo[i].fork_left = &args->fork_tab[i];
+    args->philo[i].fork_right = &args->fork_tab[0];
+}
+
 void start_threads(t_args *args)
 {
     int i;
 
-    i = 0;
-	while (i < args->nb_philo - 1)
-	{
-        args->philo[i].num = i;
-        args->philo[i].name = i + 1;
-        args->philo[i].time = &args->time;
-        args->philo[i].fork_left = &args->fork_tab[i];
-        args->philo[i].fork_right = &args->fork_tab[i + 1];
+    i = -1;
+	gettimeofday(&args->time.start, NULL);
+	while (++i < args->nb_philo)
 		pthread_create(&args->thread_tab[i], NULL, &philo_routine, &args->philo[i]);
-        i++;
-	}
-    args->philo[i].num = i;
-    args->philo[i].name = i + 1;
-    args->philo[i].time = &args->time;
-    args->philo[i].fork_left = &args->fork_tab[i];
-    args->philo[i].fork_right = &args->fork_tab[0];
-	pthread_create(&args->thread_tab[i], NULL, &philo_routine, &args->philo[i]);
 }
 
 int main(int ac, char **av)
@@ -91,6 +110,7 @@ int main(int ac, char **av)
     int     i;
     void    *value_ptr;
 
+	memset(&args, 0, sizeof(t_args));
 	if ((err = check_args(ac, av, &args)) && err)
 		clean_and_exit(&args, 0, err);
 	if (!(args.thread_tab = malloc(sizeof(pthread_t) * args.nb_philo)))
@@ -99,8 +119,8 @@ int main(int ac, char **av)
 		clean_and_exit(&args, 1, "Malloc in forks_tab failed...");
     if (!(args.philo = malloc(sizeof(t_philo) * args.nb_philo)))
 		clean_and_exit(&args, 2, "Malloc in philo_tab failed...");
-    gettimeofday(&args.time.start, NULL);
     start_mutexes(&args);
+	prepare_threads(&args);
     start_threads(&args);
 	i = 0;
     value_ptr = (void *)666;
