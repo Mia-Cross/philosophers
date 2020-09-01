@@ -6,7 +6,7 @@
 /*   By: lemarabe <lemarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 18:30:38 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/09/01 19:47:44 by lemarabe         ###   ########.fr       */
+/*   Updated: 2020/09/01 19:51:46 by lemarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,7 @@ void *philo_routine(void *arg)
 
     philo = (t_philo *)arg;
 	update_death_clock(&philo->death, philo->time->to_die);
-    //print_timeval(philo->death, philo->name);
-//    ft_putunsigned_long(philo->laps_left);
     while (philo->laps_left)
- //   while (1)
     {
 		if (!philosopher_thinks(philo))
             return (NULL);
@@ -55,7 +52,6 @@ char *check_args(char **av, t_args *args)
     }
     else
         args->nb_laps = -1;
- //   printf("%ld %ld %ld %d\n", args->time.to_die, args->time.to_eat, args->time.to_sleep, args->time.nb_laps);
     return (NULL);
 }
 
@@ -130,13 +126,9 @@ int main(int ac, char **av)
     start_threads(&args);
 	i = 0;
     value_ptr = (void *)666;
- //   while (i < args.nb_philo)
- //       pthread_detach(args.thread_tab[i++]);
     i = 0;
 	while (value_ptr && i < args.nb_philo)  // a mon avis faut qu'il attende que le premier
         pthread_join(args.thread_tab[i++], &value_ptr);   //genre while ptr == NULL
- //   while (i < args.nb_philo)
- //       pthread_join(args.thread_tab[i++], NULL);
 	clean_and_exit(&args, 3, "\nBYE\n");
 	return (0);
 }

@@ -12,7 +12,7 @@ SRCS = 	philo_one.c \
 OBJS =	$(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 DPDCS =	$(OBJS:.o=.d)
 
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror 
 
 opti:
 	@make -j all

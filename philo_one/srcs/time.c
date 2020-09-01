@@ -6,7 +6,7 @@
 /*   By: lemarabe <lemarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 19:50:12 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/09/01 19:50:13 by lemarabe         ###   ########.fr       */
+/*   Updated: 2020/09/01 19:51:56 by lemarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void update_death_clock(t_timeval *death, time_t to_die)
 {
 	gettimeofday(death, NULL);
-//	ft_putunsigned_long(to_die);
 	death->tv_usec += to_die;
 	if (death->tv_usec > 999999)
 	{
