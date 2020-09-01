@@ -6,7 +6,7 @@
 /*   By: lemarabe <lemarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 18:54:24 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/08/31 20:36:37 by lemarabe         ###   ########.fr       */
+/*   Updated: 2020/09/01 19:23:37 by lemarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,6 @@ unsigned long ft_atoi_ulong(char *str)
         out = out * 10 + str[i++] - '0';
     return (out);
 }
-
-/*void ft_putunsigned_long(time_t nbr)
-{
-	char c;
-
-	if (nbr > 9)
-		ft_putunsigned_long((nbr / 10));
-	c = nbr % 10 + '0';
-	write(1, &c, 1);
-} */
-
-
-
 
 static int		nbr_len(unsigned long p)
 {
