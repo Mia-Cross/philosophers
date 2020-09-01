@@ -17,13 +17,15 @@ void display_action(t_timeval start, char *philo, char *action)
     char *time;
     char *msg;
     int i;
+	int j;
 
     time = ft_itoa(get_time_since_start(start));
     if (!(msg = malloc(sizeof(char) * (ft_strlen(time) + ft_strlen(philo) + ft_strlen(action) + 8))))
         return;
     i = 0;
-    while (*time != '\0')
-        msg[i++] = *time++;
+	j = 0;
+    while (time[j] != '\0')
+        msg[i++] = time[j++];
     msg[i++] = ' ';
     while (*philo != '\0')
         msg[i++] = *philo++;
@@ -32,13 +34,14 @@ void display_action(t_timeval start, char *philo, char *action)
         msg[i++] = *action++;
     msg[i++] = '\0';
     write(1, msg, ft_strlen(msg));
+//	free(time);
     free(msg);
 }
 
 int philosopher_eats(t_philo *philo)
 {
     if (philo->laps_left > 0)
-        philo->laps_left -= 1;
+		philo->laps_left -= 1;
 	display_action(philo->time->start, philo->name, "is eating\n");
     update_death_clock(&philo->death, philo->time->to_die);
 	usleep(philo->time->to_eat);

@@ -18,12 +18,11 @@ timestamp_in_ms X is thinking
 timestamp_in_ms X died
 ______________________________________________________________
 
-
-POURQUOI LE +1 DANS PHILO_NUM ??
-
 DISPLAY LA MORT DANS LE RETURN AVEC DEATH_CLOCK ET PAS NOW
 
-
+MONITORING DES DEATH_CLOCKS DEPUIS L'EXTERIEUR
+> POINTEURS VERS LES DEATH_CLOCKS
+> DES QUE NOW = UNE DES CLOCKS, QUITTER
 
 
 ///////////////////////////////////////////////////////////////////////////

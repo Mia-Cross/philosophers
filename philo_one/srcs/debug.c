@@ -32,7 +32,7 @@ void print_timeval(t_timeval time, char *name)
         msg[i++] = *sec++;
     msg[i++] = ',';
     while (*usec != '\0')
-        msg[i++] = *usec++;
+		msg[i++] = *usec++;
 	msg[i++] = '\n';
     msg[i++] = '\0';
     write(1, msg, ft_strlen(msg));
