@@ -49,3 +49,27 @@ int check_death_clock(t_timeval death_time)
         return (1);
     return(0);
 }
+
+void monitor_death_clocks(t_args args)
+{
+	int i;
+//	int j;
+
+	usleep(100 * args.nb_philo);
+	while (1)
+	{
+		i = -1;
+		while (++i < args.nb_philo)
+		{
+			if (check_death_clock(args.philo[i].death))
+			{
+				display_action(args.philo[i].time->start, args.philo[i].name, "died\n");
+	//			j = -1;
+	//			while (++j < args.nb_philo)  // a mon avis faut qu'il attende que le premier
+	//				pthread_join(args.thread_tab[j], NULL);   //genre while ptr == NULL
+				clean_and_exit(&args, 3, "\nBYE\n");
+			}
+		}
+		usleep(10);
+	}
+}

@@ -67,5 +67,6 @@ int philosopher_sleeps(t_philo *philo);
 int philosopher_eats(t_philo *philo);
 int philosopher_thinks(t_philo *philo);
 int check_death_clock(t_timeval death_time);
+void monitor_death_clocks(t_args args);
 
 #endif

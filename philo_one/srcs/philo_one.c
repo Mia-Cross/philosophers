@@ -117,18 +117,15 @@ void get_arguments(int ac, char **av, t_args *args)
 int main(int ac, char **av)
 {
     t_args  args;
-    int     i;
-    void    *value_ptr;
+//    int     i;
+//    void    *value_ptr;
 
     get_arguments(ac, av, &args);
     start_mutexes(&args);
 	prepare_threads(&args);
     start_threads(&args);
-	i = 0;
-    value_ptr = (void *)666;
-    i = 0;
-	while (value_ptr && i < args.nb_philo)  // a mon avis faut qu'il attende que le premier
-        pthread_join(args.thread_tab[i++], &value_ptr);   //genre while ptr == NULL
-	clean_and_exit(&args, 3, "\nBYE\n");
+	monitor_death_clocks(args);
+//    value_ptr = (void *)666;
+//    i = 0;
 	return (0);
 }

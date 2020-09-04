@@ -47,11 +47,11 @@ int philosopher_eats(t_philo *philo)
 	usleep(philo->time->to_eat);
 	pthread_mutex_unlock(philo->fork_left);
 	pthread_mutex_unlock(philo->fork_right);
-	if (check_death_clock(philo->death))
+/*	if (check_death_clock(philo->death))
 	{
     	display_action(philo->time->start, philo->name, "died\n");
         return (0);
-    }
+    } */
     return (1);
 }
 
@@ -59,11 +59,11 @@ int philosopher_sleeps(t_philo *philo)
 {
     display_action(philo->time->start, philo->name, "is sleeping\n");
     usleep(philo->time->to_sleep);
-	if (check_death_clock(philo->death))
+/*	if (check_death_clock(philo->death))
 	{
     	display_action(philo->time->start, philo->name, "died\n");
         return (0);
-    }
+    } */
     return (1);
 }
 
@@ -71,18 +71,18 @@ int philosopher_thinks(t_philo *philo)
 {
     display_action(philo->time->start, philo->name, "is thinking\n");
 	pthread_mutex_lock(philo->fork_left);
-	if (check_death_clock(philo->death))
+/*	if (check_death_clock(philo->death))
 	{
     	display_action(philo->time->start, philo->name, "died\n");
         return (0);
-    }
+    } */
 	display_action(philo->time->start, philo->name, "has taken a fork\n");
 	pthread_mutex_lock(philo->fork_right);
 	if (check_death_clock(philo->death))
-	{
+/*	{
     	display_action(philo->time->start, philo->name, "died\n");
         return (0);
-    }
+    } */
 	display_action(philo->time->start, philo->name, "has taken a fork\n");
     return (1);
 }
