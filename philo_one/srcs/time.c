@@ -6,7 +6,7 @@
 /*   By: lemarabe <lemarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 19:50:12 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/09/01 19:51:56 by lemarabe         ###   ########.fr       */
+/*   Updated: 2020/09/08 21:02:40 by lemarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ int check_death_clock(t_timeval death_time)
 	t_timeval now;
 
     gettimeofday(&now, NULL);
-//	print_timeval(now, "|");
-//	print_timeval(death_time, "_");
     if (now.tv_sec > death_time.tv_sec)
         return (1);
     if (now.tv_sec == death_time.tv_sec && now.tv_usec >= death_time.tv_usec)
@@ -53,9 +51,17 @@ int check_death_clock(t_timeval death_time)
 void monitor_death_clocks(t_args args)
 {
 	int i;
-//	int j;
-
-	usleep(100 * args.nb_philo);
+	t_philo *dead;
+	
+	//usleep(100 * args.nb_philo);
+	//
+	//		WORK IN PROGRESS
+	//
+	dead = join_threads(&args);
+	//
+	//
+	//
+	
 	while (1)
 	{
 		i = -1;
@@ -63,10 +69,7 @@ void monitor_death_clocks(t_args args)
 		{
 			if (check_death_clock(args.philo[i].death))
 			{
-				display_action(args.philo[i].time->start, args.philo[i].name, "died\n");
-	//			j = -1;
-	//			while (++j < args.nb_philo)  // a mon avis faut qu'il attende que le premier
-	//				pthread_join(args.thread_tab[j], NULL);   //genre while ptr == NULL
+				stop_thread(&args, i);
 				clean_and_exit(&args, 3, "\nBYE\n");
 			}
 		}

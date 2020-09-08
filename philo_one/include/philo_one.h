@@ -6,7 +6,7 @@
 /*   By: lemarabe <lemarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 18:53:21 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/09/01 19:04:45 by lemarabe         ###   ########.fr       */
+/*   Updated: 2020/09/08 20:57:28 by lemarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_time
 
 typedef struct  s_philo
 {
+    int         num;
     char        *name;
     t_time      *time;
     t_timeval   death;
@@ -54,19 +55,23 @@ typedef struct s_args
 int ft_strlen(char *str);
 void ft_putunsigned_long(time_t nbr);
 unsigned long ft_atoi_ulong(char *str);
-char			*ft_itoa(unsigned long nbr);
+char	*ft_itoa(unsigned long nbr);
 void ft_putchar(char c);
 void print_timeval(t_timeval time, char *name);
 void ft_putstr(char *str);
 
+t_philo *join_threads(t_args *args);
+void get_arguments(int ac, char **av, t_args *args);
+char *check_args(char **av, t_args *args);
 int clean_and_exit(t_args *args, int to_free, char *str);
 void update_death_clock(t_timeval *death, time_t to_die);
 void display_action(t_timeval start, char *philo, char *action);
 time_t get_time_since_start(t_timeval start);
-int philosopher_sleeps(t_philo *philo);
-int philosopher_eats(t_philo *philo);
-int philosopher_thinks(t_philo *philo);
+void philosopher_sleeps(t_philo *philo);
+void philosopher_eats(t_philo *philo);
+void philosopher_thinks(t_philo *philo);
 int check_death_clock(t_timeval death_time);
 void monitor_death_clocks(t_args args);
+void stop_thread(t_args *args, int i);
 
 #endif

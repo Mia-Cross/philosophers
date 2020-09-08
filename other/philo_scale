@@ -1,5 +1,5 @@
-get datas...
-done!
+PHILO-ONE :
+
 - Check the code of philo_one for the following things and ask for explanation.
 - Check if there is one thread per philosopher.
 - Check if there is a mutex per fork and that it's used to check the fork value and/or change it.
@@ -15,6 +15,8 @@ done!
 - Test with 2 philosophers and check the different times (a death delayed by more than 10 ms is unacceptable).
 - Test your own values to check all the rules. Check if a philosopher dies at the right time, if they don't steal forks, etc.
 
+PHILO-TWO :
+
 - Check the code of philo_two for the following things and ask for explanation.
 - Check if there is one thread per philosopher.
 - Check if there is a single semaphore that represents the number of forks.
@@ -29,6 +31,8 @@ done!
 - Test with 4 310 200 100, a philosopher should die!
 - Test with 2 philosophers and check the different times (a death delayed by more than 10 ms is unacceptable).
 - Test your own values to check all the rules. Check if a philosopher dies at the right time, if they don't steal forks, etc.
+
+PHILO-THREE :
 
 - Check the code of philo_three for the following things and ask for explanation.
 - Check if there will be one process per philosopher and that the first process waits for all of them.

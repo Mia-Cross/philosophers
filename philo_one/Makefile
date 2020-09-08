@@ -8,11 +8,12 @@ SRCS = 	philo_one.c \
 		utils.c \
 		time.c \
 		actions.c \
+		parsing_and_exit.c \
 		debug.c
 OBJS =	$(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 DPDCS =	$(OBJS:.o=.d)
 
-CFLAGS = -Wall -Wextra -Werror -pthread
+CFLAGS = -Wall -Wextra -Werror -pthread #-fsanitize=address
 
 opti:
 	@make -j all

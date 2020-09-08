@@ -6,11 +6,14 @@
 /*   By: lemarabe <lemarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 19:50:01 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/09/01 19:50:02 by lemarabe         ###   ########.fr       */
+/*   Updated: 2020/09/08 18:22:35 by lemarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
+
+//	print_timeval(now, "|");
+//	print_timeval(death_time, "_");
 
 void print_timeval(t_timeval time, char *name)
 {

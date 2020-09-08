@@ -6,29 +6,11 @@
 /*   By: lemarabe <lemarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 18:54:24 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/09/01 20:19:08 by lemarabe         ###   ########.fr       */
+/*   Updated: 2020/09/08 20:28:00 by lemarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
-
-int clean_and_exit(t_args *args, int to_free, char *str)
-{
-    if (to_free)
-    {
-        free(args->thread_tab);
-        if (to_free > 1)
-        {
-            free(args->fork_tab);
-            if (to_free > 2)
-                free(args->philo);
-        }
-    }
-//	system("leaks philo_one");
-    write(2, str, ft_strlen(str));
-    write(2, "\n", 1);
-    exit(1);
-}
 
 int ft_strlen(char *str)
 {
