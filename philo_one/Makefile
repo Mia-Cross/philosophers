@@ -5,15 +5,15 @@ OBJDIR =	.obj
 INCLUDES =	-I include/
 
 SRCS = 	philo_one.c \
-		utils.c \
-		time.c \
-		actions.c \
-		parsing_and_exit.c \
-		debug.c
+		c_utils.c \
+		c_time.c \
+		c_parsing_and_setup.c \
+		s_threads_and_mutexes.c
+
 OBJS =	$(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 DPDCS =	$(OBJS:.o=.d)
 
-CFLAGS = -Wall -Wextra -Werror -pthread #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -pthread
 
 opti:
 	@make -j all

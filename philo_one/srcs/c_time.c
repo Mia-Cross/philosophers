@@ -48,31 +48,3 @@ int check_death_clock(t_timeval death_time)
     return(0);
 }
 
-void monitor_death_clocks(t_args args)
-{
-	int i;
-	t_philo *dead;
-	
-	//usleep(100 * args.nb_philo);
-	//
-	//		WORK IN PROGRESS
-	//
-	dead = join_threads(&args);
-	//
-	//
-	//
-	
-	while (1)
-	{
-		i = -1;
-		while (++i < args.nb_philo)
-		{
-			if (check_death_clock(args.philo[i].death))
-			{
-				stop_thread(&args, i);
-				clean_and_exit(&args, 3, "\nBYE\n");
-			}
-		}
-		usleep(10);
-	}
-}

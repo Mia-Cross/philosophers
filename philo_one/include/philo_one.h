@@ -37,7 +37,8 @@ typedef struct  s_philo
     char        *name;
     t_time      *time;
     t_timeval   death;
-    int         laps_left;    
+    int         laps_left;
+	pthread_t       thread;
     pthread_mutex_t *fork_left;
     pthread_mutex_t *fork_right;
 }               t_philo;
@@ -47,31 +48,35 @@ typedef struct s_args
 	int             nb_philo;
 	t_time	        time;
     int             nb_laps;
-    pthread_t       *thread_tab;
+//    pthread_t       *thread_tab;
     pthread_mutex_t *fork_tab; 
     t_philo         *philo;
 }              t_args;
 
-int ft_strlen(char *str);
-void ft_putunsigned_long(time_t nbr);
-unsigned long ft_atoi_ulong(char *str);
-char	*ft_itoa(unsigned long nbr);
-void ft_putchar(char c);
-void print_timeval(t_timeval time, char *name);
-void ft_putstr(char *str);
-
-t_philo *join_threads(t_args *args);
 void get_arguments(int ac, char **av, t_args *args);
 char *check_args(char **av, t_args *args);
-int clean_and_exit(t_args *args, int to_free, char *str);
+void start_mutexes(t_args *args);
+void prepare_threads(t_args *args);
+void start_threads(t_args *args);
+void join_threads(t_args *args);
+void *philo_routine(void *arg);
+void monitor_death_clocks(t_args args);
+int check_death_clock(t_timeval death_time);
 void update_death_clock(t_timeval *death, time_t to_die);
 void display_action(t_timeval start, char *philo, char *action);
 time_t get_time_since_start(t_timeval start);
-void philosopher_sleeps(t_philo *philo);
-void philosopher_eats(t_philo *philo);
-void philosopher_thinks(t_philo *philo);
-int check_death_clock(t_timeval death_time);
-void monitor_death_clocks(t_args args);
-void stop_thread(t_args *args, int i);
+int clean_and_exit(t_args *args, int to_free, char *str);
+void destroy_mutexes(t_args *args);
+int ft_strlen(char *str);
+unsigned long ft_atoi_ulong(char *str);
+char	*ft_itoa(unsigned long nbr);
+
+//void ft_putunsigned_long(time_t nbr);
+//void ft_putchar(char c);
+//void print_timeval(t_timeval time, char *name);
+//void ft_putstr(char *str);
+//void philosopher_sleeps(t_philo *philo);
+//void philosopher_eats(t_philo *philo);
+//void philosopher_thinks(t_philo *philo);
 
 #endif
