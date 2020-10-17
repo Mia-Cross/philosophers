@@ -20,11 +20,9 @@ void *philo_routine(void *arg)
 	update_death_clock(&philo->death, philo->time->to_die);
     while (philo->laps_left)
     {
-		display_action(philo->time->start, philo->name, "is thinking\n");
 		pthread_mutex_lock(philo->fork_right);
 		display_action(philo->time->start, philo->name, "has taken a fork\n");
 		pthread_mutex_lock(philo->fork_left);
-//		if (check_death_clock(philo->death))
 		display_action(philo->time->start, philo->name, "has taken a fork\n");
     	update_death_clock(&philo->death, philo->time->to_die);
 		display_action(philo->time->start, philo->name, "is eating\n");
@@ -34,63 +32,58 @@ void *philo_routine(void *arg)
 		if (philo->laps_left > 0)
 			philo->laps_left -= 1;
 		if (!philo->laps_left)
+		{
+			pthread_detach(philo->thread);
 			return (NULL);
+		}
 		display_action(philo->time->start, philo->name, "is sleeping\n");
     	usleep(philo->time->to_sleep);
+		display_action(philo->time->start, philo->name, "is thinking\n");
     }
     return (NULL);
 }
 
-int some_are_left(t_args args)
+void *monitor_death_clocks(void *arg)
 {
 	int i;
-
-	i = -1;
-	while (++i < args.nb_philo)
-	{
-		if (args.philo[i].laps_left != 0)
-			return (1);
-	}
-	return (0);
-}
-
-void monitor_death_clocks(t_args args)
-{
-	int i;
+	int quit;
+	t_args *args;
 	
-	usleep(10000);
-	write(1, "monitor start\n", 14);
-	while (some_are_left(args))
+//	write(1, "monitor start\n", 14);
+    args = (t_args *)arg;
+	quit = args->nb_philo;
+	usleep(args->time.to_die);
+	while (quit)
 	{
 		i = -1;
-		while (++i < args.nb_philo)
+		while (++i < args->nb_philo)
 		{
-			if (check_death_clock(args.philo[i].death))
+			if (check_death_clock(args->philo[i].death))
 			{
-				args.philo[i].laps_left = 0;
-				display_action(args.philo[i].time->start, args.philo[i].name, "died\n");
-				clean_and_exit(&args, 3, "\nBYE (inside)\n");
+				display_action(args->philo[i].time->start, args->philo[i].name, "died\n");
+				return (NULL);
 			}
+			if (!args->philo[i].laps_left)
+				quit--;
+			if (!quit)
+				return (NULL);
 		}
 		usleep(10);
 	}
-	clean_and_exit(&args, 3, "\nBYE (outside)\n");
+	return (NULL);
 }
 
 int main(int ac, char **av)
 {
     t_args  args;
-//	pthread_mutex_t **fork_tab;
 
     get_arguments(ac, av, &args);
-//	write(1, "1", 1);
     start_mutexes(&args);
-//	write(1, "2", 1);
 	prepare_threads(&args);
-//	write(1, "3", 1);
-    start_threads(&args);
-//	write(1, "4", 1);
-	monitor_death_clocks(args);
-//	join_threads(&args);
+ //   start_threads(&args);
+	pthread_create(&args.clock, NULL, &monitor_death_clocks, &args);
+	pthread_join(args.clock, NULL);
+//	clean_and_exit();	a reecrire proprement
+//	monitor_death_clocks(args);
 	return (0);
 }

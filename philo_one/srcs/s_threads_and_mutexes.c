@@ -35,6 +35,7 @@ void prepare_threads(t_args *args)
 	int i;
 
     i = -1;
+	gettimeofday(&args->time.start, NULL);
 	while (++i < args->nb_philo)
 	{
 		memset(&args->philo[i], 0, sizeof(t_philo));
@@ -47,6 +48,8 @@ void prepare_threads(t_args *args)
         	args->philo[i].fork_right = &args->fork_tab[i - 1];
 		else
     		args->philo[i].fork_right = &args->fork_tab[args->nb_philo - 1];
+		usleep(100);
+		pthread_create(&args->philo[i].thread, NULL, &philo_routine, &args->philo[i]);
 	}
 }
 

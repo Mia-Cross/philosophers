@@ -77,23 +77,3 @@ void display_action(t_timeval start, char *philo, char *action)
 	free(time);
     free(msg);
 }
-
-
-void start_threads(t_args *args)
-{
-    int i;
-
-    i = -1;
-	gettimeofday(&args->time.start, NULL);
-	while (++i < args->nb_philo)
-		pthread_create(&args->philo[i].thread, NULL, &philo_routine, &args->philo[i]);
-}
-
-void join_threads(t_args *args)
-{
-    int i;
-
-    i = -1;
-	while (++i < args->nb_philo)
-		pthread_join(args->philo[i].thread, NULL);
-}

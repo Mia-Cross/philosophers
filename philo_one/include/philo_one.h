@@ -48,7 +48,7 @@ typedef struct s_args
 	int             nb_philo;
 	t_time	        time;
     int             nb_laps;
-//    pthread_t       *thread_tab;
+    pthread_t       clock;
     pthread_mutex_t *fork_tab; 
     t_philo         *philo;
 }              t_args;
@@ -60,7 +60,7 @@ void prepare_threads(t_args *args);
 void start_threads(t_args *args);
 void join_threads(t_args *args);
 void *philo_routine(void *arg);
-void monitor_death_clocks(t_args args);
+void *monitor_death_clocks(void *arg);
 int check_death_clock(t_timeval death_time);
 void update_death_clock(t_timeval *death, time_t to_die);
 void display_action(t_timeval start, char *philo, char *action);
