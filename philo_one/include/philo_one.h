@@ -19,8 +19,6 @@
 # include <sys/time.h>
 # include <pthread.h>
 
-# include <stdio.h>
-
 typedef struct timeval t_timeval;
 
 typedef struct s_time
@@ -33,12 +31,13 @@ typedef struct s_time
 
 typedef struct  s_philo
 {
-    int         num;
     char        *name;
     t_time      *time;
     t_timeval   death;
     int         laps_left;
 	pthread_t       thread;
+	pthread_mutex_t state;
+	pthread_mutex_t *channel;
     pthread_mutex_t *fork_left;
     pthread_mutex_t *fork_right;
 }               t_philo;
@@ -49,21 +48,23 @@ typedef struct s_args
 	t_time	        time;
     int             nb_laps;
     pthread_t       clock;
-    pthread_mutex_t *fork_tab; 
+    pthread_mutex_t *forks;
+	pthread_t 		*states;
+	pthread_mutex_t channel; 
     t_philo         *philo;
 }              t_args;
 
 void get_arguments(int ac, char **av, t_args *args);
 char *check_args(char **av, t_args *args);
 void start_mutexes(t_args *args);
-void prepare_threads(t_args *args);
+//void prepare_threads(t_args *args);
 void start_threads(t_args *args);
 void join_threads(t_args *args);
 void *philo_routine(void *arg);
 void *monitor_death_clocks(void *arg);
 int check_death_clock(t_timeval death_time);
 void update_death_clock(t_timeval *death, time_t to_die);
-void display_action(t_timeval start, char *philo, char *action);
+void display_action(pthread_mutex_t *channel, t_timeval start, char *philo, char *action);
 time_t get_time_since_start(t_timeval start);
 int clean_and_exit(t_args *args, int to_free, char *str);
 void destroy_mutexes(t_args *args);

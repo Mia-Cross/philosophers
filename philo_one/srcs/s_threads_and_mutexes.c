@@ -16,9 +16,14 @@ void start_mutexes(t_args *args)
 {
     int i;
 
+	pthread_mutex_init(&args->channel, NULL);
+	pthread_mutex_init(&args->forks[args->nb_philo - 1], NULL);
     i = 0;
-    while (i < args->nb_philo)
-        pthread_mutex_init(&args->fork_tab[i++], NULL);
+    while (i < args->nb_philo - 1)
+	{
+		pthread_mutex_init(&args->forks[i], NULL);
+        pthread_mutex_init(&args->philo[i++].state, NULL);
+	}
 }
 
 void destroy_mutexes(t_args *args)
@@ -26,11 +31,18 @@ void destroy_mutexes(t_args *args)
     int i;
 
     i = 0;
-    while (i < args->nb_philo)
-        pthread_mutex_destroy(&args->fork_tab[i++]);
+	while (i < args->nb_philo)
+	{
+		pthread_mutex_unlock(&args->philo[i].state);
+		pthread_mutex_unlock(&args->forks[i]);
+		pthread_mutex_destroy(&args->philo[i].state);
+		pthread_mutex_destroy(&args->forks[i++]);
+	}
+	pthread_mutex_unlock(&args->channel);
+	pthread_mutex_destroy(&args->channel);
 }
 
-void prepare_threads(t_args *args)
+void start_threads(t_args *args)
 {
 	int i;
 
@@ -39,17 +51,18 @@ void prepare_threads(t_args *args)
 	while (++i < args->nb_philo)
 	{
 		memset(&args->philo[i], 0, sizeof(t_philo));
-        args->philo[i].num = i;
         args->philo[i].name = ft_itoa(i + 1);
         args->philo[i].time = &args->time;
         args->philo[i].laps_left = args->nb_laps;
-        args->philo[i].fork_left = &args->fork_tab[i];
+		args->philo[i].channel = &args->channel;
+        args->philo[i].fork_left = &args->forks[i];
 		if (i > 0)
-        	args->philo[i].fork_right = &args->fork_tab[i - 1];
+        	args->philo[i].fork_right = &args->forks[i - 1];
 		else
-    		args->philo[i].fork_right = &args->fork_tab[args->nb_philo - 1];
-		usleep(100);
+    		args->philo[i].fork_right = &args->forks[args->nb_philo - 1];
+		usleep(1000);
 		pthread_create(&args->philo[i].thread, NULL, &philo_routine, &args->philo[i]);
+		pthread_mutex_lock(&args->philo[i].state);
 	}
 }
 
@@ -59,18 +72,25 @@ int clean_and_exit(t_args *args, int to_free, char *str)
 	
     if (to_free)
     {
-        free(args->fork_tab);
         if (to_free > 1)
         {
-			destroy_mutexes(args);
-			i = -1;
-			while (++i < args->nb_philo)
-				free(args->philo[i].name);
-            free(args->philo);
+			if (to_free > 2)
+			{
+//				i = -1;
+//				while (++i < args->nb_philo)
+//					pthread_detach(args->philo[i].thread);
+				destroy_mutexes(args);
+				i = -1;
+				while (++i < args->nb_philo)
+					free(args->philo[i].name);
+            	free(args->philo);
+			}
+			free(args->states);
         }
+        free(args->forks);
     }
-//	system("leaks philo_one");
     write(2, str, ft_strlen(str));
     write(2, "\n", 1);
+//	system("leaks philo_one");
     exit(0);
 }

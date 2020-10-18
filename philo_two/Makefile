@@ -5,10 +5,9 @@ OBJDIR =	.obj
 INCLUDES =	-I include/
 
 SRCS = 	philo_two.c \
-		utils.c \
-		time.c \
-		actions.c \
-		parsing_and_setup.c
+		c_utils.c \
+		c_time.c \
+		c_parsing_and_setup.c
 
 OBJS =	$(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 DPDCS =	$(OBJS:.o=.d)

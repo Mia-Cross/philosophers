@@ -46,18 +46,34 @@ void get_arguments(int ac, char **av, t_args *args)
     memset(args, 0, sizeof(t_args));
 	if ((err = check_args(av, args)) && err)
 		clean_and_exit(args, 0, err);
-	if (!(args->thread_tab = malloc(sizeof(pthread_t) * args->nb_philo)))
-		clean_and_exit(args, 0, "Malloc in thread_tab failed...");
+	if (!(args->forks = malloc(sizeof(pthread_mutex_t) * args->nb_philo)))
+		clean_and_exit(args, 0, "Malloc in forks_tab failed...");
     if (!(args->philo = malloc(sizeof(t_philo) * args->nb_philo)))
-		clean_and_exit(args, 2, "Malloc in philo_tab failed...");
+		clean_and_exit(args, 1, "Malloc in philo_tab failed...");
 }
 
-void start_threads(t_args *args)
+void display_action(t_timeval start, char *philo, char *action)
 {
+    char *time;
+    char *msg;
     int i;
+	int j;
 
-    i = -1;
-	gettimeofday(&args->time.start, NULL);
-	while (++i < args->nb_philo)
-		pthread_create(&args->thread_tab[i], NULL, &philo_routine, &args->philo[i]);
+    time = ft_itoa(get_time_since_start(start));
+    if (!(msg = malloc(sizeof(char) * (ft_strlen(time) + ft_strlen(philo) + ft_strlen(action) + 8))))
+        return;
+    i = 0;
+	j = 0;
+    while (time[j] != '\0')
+        msg[i++] = time[j++];
+    msg[i++] = ' ';
+    while (*philo != '\0')
+        msg[i++] = *philo++;
+    msg[i++] = ' ';
+    while (*action != '\0')
+        msg[i++] = *action++;
+    msg[i++] = '\0';
+    write(1, msg, ft_strlen(msg));
+	free(time);
+    free(msg);
 }
