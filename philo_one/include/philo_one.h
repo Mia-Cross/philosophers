@@ -35,6 +35,7 @@ typedef struct  s_philo
     t_time      *time;
     t_timeval   death;
     int         laps_left;
+	int         alive;
 	pthread_t       thread;
 	pthread_mutex_t state;
 	pthread_mutex_t *channel;
@@ -57,11 +58,10 @@ typedef struct s_args
 void get_arguments(int ac, char **av, t_args *args);
 char *check_args(char **av, t_args *args);
 void start_mutexes(t_args *args);
-//void prepare_threads(t_args *args);
-void start_threads(t_args *args);
-void join_threads(t_args *args);
-void *philo_routine(void *arg);
-void *monitor_death_clocks(void *arg);
+void start_philo_threads(t_args *args);
+void *philo_life(void *arg);
+//void join_threads(t_args *args);
+//void *monitor_death_clocks(void *arg);
 int check_death_clock(t_timeval death_time);
 void update_death_clock(t_timeval *death, time_t to_die);
 void display_action(pthread_mutex_t *channel, t_timeval start, char *philo, char *action);

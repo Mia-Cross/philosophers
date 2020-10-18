@@ -42,7 +42,7 @@ void destroy_mutexes(t_args *args)
 	pthread_mutex_destroy(&args->channel);
 }
 
-void start_threads(t_args *args)
+void start_philo_threads(t_args *args)
 {
 	int i;
 
@@ -54,6 +54,7 @@ void start_threads(t_args *args)
         args->philo[i].name = ft_itoa(i + 1);
         args->philo[i].time = &args->time;
         args->philo[i].laps_left = args->nb_laps;
+		args->philo[i].alive = 1;
 		args->philo[i].channel = &args->channel;
         args->philo[i].fork_left = &args->forks[i];
 		if (i > 0)
@@ -61,7 +62,7 @@ void start_threads(t_args *args)
 		else
     		args->philo[i].fork_right = &args->forks[args->nb_philo - 1];
 		usleep(1000);
-		pthread_create(&args->philo[i].thread, NULL, &philo_routine, &args->philo[i]);
+		pthread_create(&args->philo[i].thread, NULL, &philo_life, &args->philo[i]);
 		pthread_mutex_lock(&args->philo[i].state);
 	}
 }
