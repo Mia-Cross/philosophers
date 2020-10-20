@@ -18,8 +18,6 @@ timestamp_in_ms X is thinking
 timestamp_in_ms X died
 ______________________________________________________________
 
-DISPLAY LA MORT DANS LE RETURN AVEC DEATH_CLOCK ET PAS NOW
-
 MONITORING DES DEATH_CLOCKS DEPUIS L'EXTERIEUR
 > POINTEURS VERS LES DEATH_CLOCKS
 > DES QUE NOW = UNE DES CLOCKS, QUITTER
@@ -27,6 +25,19 @@ MONITORING DES DEATH_CLOCKS DEPUIS L'EXTERIEUR
 ESSAYER DE JOUER SUR LES PRIORITES DES THREADS :
 APPELER CHECK_CLOCK DANS DEATH_REAPER ??
 
+LES MUTEXES APPARTIENNENT A DES THREADS !
+DONC FAUT FAIRE ATTENTION AU NIVEAU DE PROGRAMME DANS
+LEQUEL JE SUIS QUAND JE LOCKE UN MUTEX ! 
+
+
+Gagner en rapidité de fin du programme :
+Réinstituer death_reaper et le tableau de states. 
+= autant de threads que de philo
+Quand reaper obtient un résultat (un philosophe est mort ou il a fini de manger),
+on récupere sa struct dans le return
+Thread clock : toutes les 10us, checke toutes les clocks
+> si une est passée : quitter le programme "proprement" (se débrouiller pour voir quels sont les threads encore actifs à ce moment et tout clean)
+Thread laps : toutes les 10us, checke si tous les philos ont fini de manger
 
 ///////////////////////////////////////////////////////////////////////////
 LES THREADS -- EXEMPLE DU MAGASIN :

@@ -35,7 +35,7 @@ typedef struct  s_philo
     t_time      *time;
     t_timeval   death;
     int         laps_left;
-	int         alive;
+	int         *quit;
 	pthread_t       thread;
 	pthread_mutex_t state;
 	pthread_mutex_t *channel;
@@ -48,13 +48,16 @@ typedef struct s_args
 	int             nb_philo;
 	t_time	        time;
     int             nb_laps;
+    int             quit;
     pthread_t       clock;
+    pthread_t       lap_counter;
     pthread_mutex_t *forks;
-	pthread_t 		*states;
+	pthread_t 		*state_thread;
 	pthread_mutex_t channel; 
     t_philo         *philo;
 }              t_args;
 
+void *death_reaper(void *arg);
 void get_arguments(int ac, char **av, t_args *args);
 char *check_args(char **av, t_args *args);
 void start_mutexes(t_args *args);

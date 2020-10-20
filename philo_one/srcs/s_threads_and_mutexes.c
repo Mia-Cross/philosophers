@@ -18,11 +18,11 @@ void start_mutexes(t_args *args)
 
 	pthread_mutex_init(&args->channel, NULL);
 	pthread_mutex_init(&args->forks[args->nb_philo - 1], NULL);
-    i = 0;
-    while (i < args->nb_philo - 1)
+    i = -1;
+    while (++i < args->nb_philo - 1)
 	{
 		pthread_mutex_init(&args->forks[i], NULL);
-        pthread_mutex_init(&args->philo[i++].state, NULL);
+        pthread_mutex_init(&args->philo[i].state, NULL);
 	}
 }
 
@@ -54,16 +54,18 @@ void start_philo_threads(t_args *args)
         args->philo[i].name = ft_itoa(i + 1);
         args->philo[i].time = &args->time;
         args->philo[i].laps_left = args->nb_laps;
-		args->philo[i].alive = 1;
+	//	args->philo[i].alive = 1;
+		args->philo[i].quit = &args->quit;
 		args->philo[i].channel = &args->channel;
         args->philo[i].fork_left = &args->forks[i];
 		if (i > 0)
         	args->philo[i].fork_right = &args->forks[i - 1];
 		else
     		args->philo[i].fork_right = &args->forks[args->nb_philo - 1];
-		usleep(1000);
+		usleep(200);
 		pthread_create(&args->philo[i].thread, NULL, &philo_life, &args->philo[i]);
-		pthread_mutex_lock(&args->philo[i].state);
+	//	pthread_mutex_lock(&args->philo[i].state);
+		pthread_create(&args->state_thread[i], NULL, &death_reaper, &args->philo[i]);
 	}
 }
 
@@ -77,21 +79,16 @@ int clean_and_exit(t_args *args, int to_free, char *str)
         {
 			if (to_free > 2)
 			{
-//				i = -1;
-//				while (++i < args->nb_philo)
-//					pthread_detach(args->philo[i].thread);
-				destroy_mutexes(args);
 				i = -1;
 				while (++i < args->nb_philo)
 					free(args->philo[i].name);
             	free(args->philo);
 			}
-			free(args->states);
+			free(args->state_thread);
         }
         free(args->forks);
     }
     write(2, str, ft_strlen(str));
     write(2, "\n", 1);
-//	system("leaks philo_one");
     exit(0);
 }
