@@ -38,8 +38,8 @@ void destroy_mutexes(t_args *args)
 		pthread_mutex_destroy(&args->philo[i].state);
 		pthread_mutex_destroy(&args->forks[i++]);
 	}
-	pthread_mutex_unlock(&args->channel);
-	pthread_mutex_destroy(&args->channel);
+//	pthread_mutex_unlock(args->channel);
+//	pthread_mutex_destroy(args->channel);
 }
 
 void start_philo_threads(t_args *args)
@@ -54,7 +54,6 @@ void start_philo_threads(t_args *args)
         args->philo[i].name = ft_itoa(i + 1);
         args->philo[i].time = &args->time;
         args->philo[i].laps_left = args->nb_laps;
-	//	args->philo[i].alive = 1;
 		args->philo[i].quit = &args->quit;
 		args->philo[i].channel = &args->channel;
         args->philo[i].fork_left = &args->forks[i];
@@ -64,8 +63,6 @@ void start_philo_threads(t_args *args)
     		args->philo[i].fork_right = &args->forks[args->nb_philo - 1];
 		usleep(200);
 		pthread_create(&args->philo[i].thread, NULL, &philo_life, &args->philo[i]);
-	//	pthread_mutex_lock(&args->philo[i].state);
-		pthread_create(&args->state_thread[i], NULL, &death_reaper, &args->philo[i]);
 	}
 }
 
@@ -77,14 +74,11 @@ int clean_and_exit(t_args *args, int to_free, char *str)
     {
         if (to_free > 1)
         {
-			if (to_free > 2)
-			{
-				i = -1;
-				while (++i < args->nb_philo)
-					free(args->philo[i].name);
-            	free(args->philo);
-			}
-			free(args->state_thread);
+			usleep(1000);
+			i = -1;
+			while (++i < args->nb_philo)
+				free(args->philo[i].name);
+            free(args->philo);
         }
         free(args->forks);
     }

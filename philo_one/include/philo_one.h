@@ -49,12 +49,11 @@ typedef struct s_args
 	t_time	        time;
     int             nb_laps;
     int             quit;
-    pthread_t       clock;
-    pthread_t       lap_counter;
-    pthread_mutex_t *forks;
-	pthread_t 		*state_thread;
-	pthread_mutex_t channel; 
     t_philo         *philo;
+    pthread_t       control;
+   // pthread_t       lap_counter;
+    pthread_mutex_t *forks;
+	pthread_mutex_t channel; 
 }              t_args;
 
 void *death_reaper(void *arg);
@@ -74,6 +73,7 @@ void destroy_mutexes(t_args *args);
 int ft_strlen(char *str);
 unsigned long ft_atoi_ulong(char *str);
 char	*ft_itoa(unsigned long nbr);
+int	ft_strncmp(char *s1, char *s2, int n);
 
 //void ft_putunsigned_long(time_t nbr);
 //void ft_putchar(char c);

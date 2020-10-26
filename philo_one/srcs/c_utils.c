@@ -103,3 +103,22 @@ char			*ft_itoa(unsigned long nbr)
 	str = print_nbr(str, nbr, n_len);
 	return (ft_strrev(str));
 }
+
+int	ft_strncmp(char *s1, char *s2, int n)
+{
+	int			i;
+	unsigned char	*u1;
+	unsigned char	*u2;
+
+	u1 = (unsigned char *)s1;
+	u2 = (unsigned char *)s2;
+	i = 0;
+	if (n == 0)
+		return (0);
+	while (u1[i] != '\0' && u2[i] != '\0' && u1[i] == u2[i] && i < (n - 1))
+		i++;
+	if (u1[i] != u2[i])
+		return (u1[i] - u2[i]);
+	else
+		return (0);
+}

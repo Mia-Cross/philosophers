@@ -49,23 +49,23 @@ void get_arguments(int ac, char **av, t_args *args)
 		clean_and_exit(args, 0, err);
 	if (!(args->forks = malloc(sizeof(pthread_mutex_t) * args->nb_philo)))
 		clean_and_exit(args, 0, "Malloc in forks_tab failed...");
-	if (!(args->state_thread = malloc(sizeof(pthread_t) * args->nb_philo)))
-		clean_and_exit(args, 1, "Malloc in states failed...");
     if (!(args->philo = malloc(sizeof(t_philo) * args->nb_philo)))
-		clean_and_exit(args, 2, "Malloc in philo_tab failed...");
+		clean_and_exit(args, 1, "Malloc in philo_tab failed...");
 }
 
 void display_action(pthread_mutex_t *channel, t_timeval start, char *philo, char *action)
 {
     char *time;
 
+    if (channel == NULL)
+        return ;
     time = ft_itoa(get_time_since_start(start));
 	pthread_mutex_lock(channel);
 	write(1, time, ft_strlen(time));
 	write(1, " ", 1);
 	write(1, philo, ft_strlen(philo));
 	write(1, " ", 1);
-	write(1, action, ft_strlen(action)); 
-	pthread_mutex_unlock(channel);
-	free(time);
+    write(1, action, ft_strlen(action));
+    pthread_mutex_unlock(channel);
+    free(time);
 }

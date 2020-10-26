@@ -82,3 +82,22 @@ void *monitor_clocks_and_laps(void *arg)
 	}
 	return (NULL);
 }
+
+void *death_reaper(void *arg)
+{
+	t_philo *philo;
+
+	philo = (t_philo *)arg;
+	usleep(philo->time->to_die - 100);
+	pthread_mutex_lock(&philo->state);
+	return (NULL);
+}
+
+void lock_alive_state(t_philo *philo, int nb_philo)
+{
+	int i;
+
+	i = -1;
+	while (++i < nb_philo)
+		pthread_mutex_lock(&philo[i].state);
+}

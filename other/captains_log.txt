@@ -29,7 +29,6 @@ LES MUTEXES APPARTIENNENT A DES THREADS !
 DONC FAUT FAIRE ATTENTION AU NIVEAU DE PROGRAMME DANS
 LEQUEL JE SUIS QUAND JE LOCKE UN MUTEX ! 
 
-
 Gagner en rapidité de fin du programme :
 Réinstituer death_reaper et le tableau de states. 
 = autant de threads que de philo
