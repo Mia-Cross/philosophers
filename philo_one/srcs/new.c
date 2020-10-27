@@ -1,3 +1,5 @@
+#include "philo_one.h"
+
 void *monitor_clocks(void *arg)
 {
 	t_args *args;
@@ -16,7 +18,6 @@ void *monitor_clocks(void *arg)
 			{
 			//	write(1, "death toll\n", 11);
 				pthread_mutex_unlock(&args->philo[i].state);
-				args->philo[i].alive = 0;
 				display_action(args->philo[i].channel, args->philo[i].time->start, args->philo[i].name, "died\n");
 				args->quit = 0;
 			}

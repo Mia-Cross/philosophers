@@ -34,7 +34,7 @@ char *check_args(char **av, t_args *args)
     }
 	else
 		args->nb_laps = -1;
-	args->quit = args->nb_philo;
+	args->quit = args->nb_philo - 1;
     return (NULL);
 }
 
@@ -53,19 +53,20 @@ void get_arguments(int ac, char **av, t_args *args)
 		clean_and_exit(args, 1, "Malloc in philo_tab failed...");
 }
 
-void display_action(pthread_mutex_t *channel, t_timeval start, char *philo, char *action)
+void display_action(t_philo *philo, char *action)
 {
     char *time;
 
-    if (channel == NULL)
+    if (philo->channel == NULL)
         return ;
-    time = ft_itoa(get_time_since_start(start));
-	pthread_mutex_lock(channel);
+    time = ft_itoa(get_time_since_start(philo->time->start));
+	pthread_mutex_lock(philo->channel);
 	write(1, time, ft_strlen(time));
 	write(1, " ", 1);
-	write(1, philo, ft_strlen(philo));
+	write(1, philo->name, ft_strlen(philo->name));
 	write(1, " ", 1);
     write(1, action, ft_strlen(action));
-    pthread_mutex_unlock(channel);
+    if (!(ft_strlen(action) == 5 || (ft_strlen(action) == 10 && !philo->quit)))
+        pthread_mutex_unlock(philo->channel);
     free(time);
 }

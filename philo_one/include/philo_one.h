@@ -19,6 +19,8 @@
 # include <sys/time.h>
 # include <pthread.h>
 
+# include <stdio.h>
+
 typedef struct timeval t_timeval;
 
 typedef struct s_time
@@ -51,7 +53,7 @@ typedef struct s_args
     int             quit;
     t_philo         *philo;
     pthread_t       control;
-   // pthread_t       lap_counter;
+    pthread_t       lap_counter;
     pthread_mutex_t *forks;
 	pthread_mutex_t channel; 
 }              t_args;
@@ -66,7 +68,7 @@ void *philo_life(void *arg);
 //void *monitor_death_clocks(void *arg);
 int check_death_clock(t_timeval death_time);
 void update_death_clock(t_timeval *death, time_t to_die);
-void display_action(pthread_mutex_t *channel, t_timeval start, char *philo, char *action);
+void display_action(t_philo *philo, char *action);
 time_t get_time_since_start(t_timeval start);
 int clean_and_exit(t_args *args, int to_free, char *str);
 void destroy_mutexes(t_args *args);

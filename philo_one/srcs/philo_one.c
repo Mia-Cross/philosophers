@@ -21,21 +21,21 @@ void *philo_life(void *arg)
     while (philo->quit)
     {
 		pthread_mutex_lock(philo->fork_right);
-		display_action(philo->channel, philo->time->start, philo->name, "has taken a fork\n");
+		display_action(philo, "has taken a fork\n");
 		pthread_mutex_lock(philo->fork_left);
-		display_action(philo->channel, philo->time->start, philo->name, "has taken a fork\n");
+		display_action(philo, "has taken a fork\n");
 		pthread_mutex_lock(&philo->state);
 		pthread_mutex_unlock(&philo->state);
     	update_death_clock(&philo->death, philo->time->to_die);
-		display_action(philo->channel, philo->time->start, philo->name, "is eating\n");
+		display_action(philo, "is eating\n");
+		if (philo->laps_left > 0)
+			philo->laps_left -= 1;
 		usleep(philo->time->to_eat);
 		pthread_mutex_unlock(philo->fork_right);
 		pthread_mutex_unlock(philo->fork_left);
-		if (philo->laps_left > 0)
-			philo->laps_left -= 1;
-		display_action(philo->channel, philo->time->start, philo->name, "is sleeping\n");
+		display_action(philo, "is sleeping\n");
     	usleep(philo->time->to_sleep);
-		display_action(philo->channel, philo->time->start, philo->name, "is thinking\n");
+		display_action(philo, "is thinking\n");
     }
     return (NULL);
 }
@@ -70,26 +70,44 @@ void *simulation_control(void *arg)
 		i = -1;
 		while (++i < args->nb_philo && args->quit)
 		{
+			if (check_death_clock(args->philo[i].death))
+			{
+				pthread_mutex_lock(&args->philo[i].state);
+				display_action(&args->philo[i], "died\n");
+				args->quit = 0;
+			//	pthread_mutex_lock(&args->channel);
+				disable_display(args->philo, args->nb_philo);
+		//		write(1, "locking channel\n", 16);
+			}
+		}
+	}
+	return (NULL);
+}
+
+void *lap_counter(void *arg)
+{
+	t_args *args;
+	int i;
+
+	args = (t_args *)arg;
+	while (args->quit)
+	{
+		usleep(10);
+		i = -1;
+		while (++i < args->nb_philo && args->quit)
+		{
 			if (!args->philo[i].laps_left)
 			{
+//				write(1, "#", 1);
 				if (args->quit > 0)
 					args->quit -= 1;
 				args->philo[i].laps_left = -1;
 			}
-			if (check_death_clock(args->philo[i].death))
-			{
-				pthread_mutex_lock(&args->philo[i].state);
-				display_action(args->philo[i].channel, args->philo[i].time->start, args->philo[i].name, "died\n");
-				disable_display(args->philo, args->nb_philo);
-				args->quit = 0;
-			}
 		}
 	}
-	write(1, "yo tout le monde c'est squeezie", 31);
+//	pthread_mutex_lock(&args->channel);
+//	write(1, "yo tout le monde c'est squeezie", 31);
 	disable_display(args->philo, args->nb_philo);
-//	pthread_mutex_unlock(&args->channel);
-//	pthread_mutex_destroy(&args->channel);
-//	memset(&args->channel, 0, sizeof(pthread_mutex_t));
 	return (NULL);
 }
 
@@ -102,7 +120,11 @@ int main(int ac, char **av)
     start_mutexes(&args);
     start_philo_threads(&args);
 	pthread_create(&args.control, NULL, &simulation_control, &args);
-	pthread_join(args.control, NULL);
+	pthread_create(&args.lap_counter, NULL, &lap_counter, &args);
+	if (args.nb_laps != -1)
+		pthread_join(args.lap_counter, NULL);
+	else
+		pthread_join(args.control, NULL);	
 	detach_philo_threads(args.philo, args.nb_philo);
 	destroy_mutexes(&args);
 	clean_and_exit(&args, 3, "");

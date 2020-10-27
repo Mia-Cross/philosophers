@@ -30,7 +30,8 @@ void destroy_mutexes(t_args *args)
 {
     int i;
 
-    i = 0;
+    usleep(1000);
+	i = 0;
 	while (i < args->nb_philo)
 	{
 		pthread_mutex_unlock(&args->philo[i].state);
@@ -38,8 +39,8 @@ void destroy_mutexes(t_args *args)
 		pthread_mutex_destroy(&args->philo[i].state);
 		pthread_mutex_destroy(&args->forks[i++]);
 	}
-//	pthread_mutex_unlock(args->channel);
-//	pthread_mutex_destroy(args->channel);
+	pthread_mutex_unlock(&args->channel);
+	pthread_mutex_destroy(&args->channel);
 }
 
 void start_philo_threads(t_args *args)
@@ -74,7 +75,6 @@ int clean_and_exit(t_args *args, int to_free, char *str)
     {
         if (to_free > 1)
         {
-			usleep(1000);
 			i = -1;
 			while (++i < args->nb_philo)
 				free(args->philo[i].name);
