@@ -32,8 +32,9 @@ char *check_args(char **av, t_args *args)
             return ("Number of rounds must be a strictly positive number !");
         args->nb_laps = ft_atoi_ulong(av[5]);
     }
-    else
-        args->nb_laps = -1;
+	else
+		args->nb_laps = -1;
+	args->quit = args->nb_philo - 1;
     return (NULL);
 }
 
@@ -46,34 +47,24 @@ void get_arguments(int ac, char **av, t_args *args)
     memset(args, 0, sizeof(t_args));
 	if ((err = check_args(av, args)) && err)
 		clean_and_exit(args, 0, err);
-	if (!(args->forks = malloc(sizeof(pthread_mutex_t) * args->nb_philo)))
-		clean_and_exit(args, 0, "Malloc in forks_tab failed...");
     if (!(args->philo = malloc(sizeof(t_philo) * args->nb_philo)))
 		clean_and_exit(args, 1, "Malloc in philo_tab failed...");
 }
 
-void display_action(t_timeval start, char *philo, char *action)
+void display_action(t_philo *philo, char *action)
 {
     char *time;
-    char *msg;
-    int i;
-	int j;
 
-    time = ft_itoa(get_time_since_start(start));
-    if (!(msg = malloc(sizeof(char) * (ft_strlen(time) + ft_strlen(philo) + ft_strlen(action) + 8))))
-        return;
-    i = 0;
-	j = 0;
-    while (time[j] != '\0')
-        msg[i++] = time[j++];
-    msg[i++] = ' ';
-    while (*philo != '\0')
-        msg[i++] = *philo++;
-    msg[i++] = ' ';
-    while (*action != '\0')
-        msg[i++] = *action++;
-    msg[i++] = '\0';
-    write(1, msg, ft_strlen(msg));
-	free(time);
-    free(msg);
+    if (!philo->quit)
+        return ;
+    time = ft_itoa(get_time_since_start(philo->time->start));
+	sem_wait(philo->channel);
+	write(1, time, ft_strlen(time));
+	write(1, " ", 1);
+	write(1, philo->name, ft_strlen(philo->name));
+	write(1, " ", 1);
+    write(1, action, ft_strlen(action));
+    //if (!(ft_strlen(action) == 5 || (ft_strlen(action) == 10 && !philo->quit)))
+    sem_post(philo->channel);
+    free(time);
 }

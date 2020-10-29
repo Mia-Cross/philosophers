@@ -4,7 +4,8 @@ SRCDIR =	srcs
 OBJDIR =	.obj
 INCLUDES =	-I include/
 
-SRCS = 	philo_two.c \
+SRCS =	philo_two.c \
+		s_threads_and_semaphores.c \
 		c_utils.c \
 		c_time.c \
 		c_parsing_and_setup.c
@@ -12,7 +13,7 @@ SRCS = 	philo_two.c \
 OBJS =	$(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 DPDCS =	$(OBJS:.o=.d)
 
-CFLAGS = -Wall -Wextra -Werror -pthread
+CFLAGS = -Wall -Wextra -Werror -pthread -fsanitize=address -g
 
 opti:
 	@make -j all
