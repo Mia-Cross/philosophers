@@ -4,9 +4,13 @@
 # include <unistd.h>
 # include <string.h>
 # include <stdlib.h>
+# include <fcntl.h>
 # include <sys/time.h>
 # include <pthread.h>
 # include <semaphore.h>
+
+# include <errno.h>
+# include <stdio.h>
 
 typedef struct timeval t_timeval;
 
