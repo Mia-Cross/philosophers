@@ -15,7 +15,10 @@ void start_philo_threads(t_args *args)
 		args->philo[i].quit = &args->quit;
         args->philo[i].forks = args->forks;
 		args->philo[i].channel = args->channel;
-    //    args->philo[i].state = sem_open("state", O_CREAT, S_IWOTH, 1);
+        errno = 0;
+        args->states[i] = sem_open(args->philo[i].name, O_CREAT, 0777, 1);
+        perror(strerror(errno));
+        args->philo[i].state = args->states[i];
         //usleep(200);
 		pthread_create(&args->philo[i].thread, NULL, &philo_life, &args->philo[i]);
 	}
@@ -23,37 +26,34 @@ void start_philo_threads(t_args *args)
 
 void destroy_semaphores(t_args *args)
 {
+    int i;
     (void)args;
 
     errno = 0;
     sem_unlink("forks");
-    //perror(strerror(errno));
+    perror(strerror(errno));
     errno = 0;
     sem_unlink("channel");
-    //perror(strerror(errno));
-   /* errno = 0;
-    sem_unlink("state");
-    //perror(strerror(errno)); */
+    perror(strerror(errno));
+    i = -1;
+    while (++i < args->nb_philo)
+    {
+        errno = 0;
+        sem_unlink(args->philo[i].name);
+        perror(strerror(errno));
+    }
 }
+
 void start_semaphores(t_args *args)
 {
-//    int i;
-
-    destroy_semaphores(args);
+ //   destroy_semaphores(args);
     errno = 0;
-    args->forks = sem_open("forks", O_CREAT, S_IWOTH, args->nb_philo);
-    //perror(strerror(errno));
+    args->forks = sem_open("forks", O_CREAT, 0777, args->nb_philo);
+    perror(strerror(errno));
     errno = 0;
-    args->channel = sem_open("channel", O_CREAT, S_IWOTH, 1);
-    //perror(strerror(errno));
- //   sem_wait(args->channel);
-  /*  i = -1;
-    errno = 0;
-    while (++i < args->nb_philo)
-        args->philo[i].state = sem_open("state", O_CREAT, S_IWOTH, 1);
-    perror(strerror(errno));*/
+    args->channel = sem_open("channel", O_CREAT, 0777, 1);
+    perror(strerror(errno));
 }
-
 
 int clean_and_exit(t_args *args, int to_free, char *str)
 {
@@ -63,11 +63,12 @@ int clean_and_exit(t_args *args, int to_free, char *str)
     {
 	    if (to_free > 1)
         {
-           usleep(100);
+            usleep(100);
             destroy_semaphores(args);
             i = -1;
             while (++i < args->nb_philo)
                 free(args->philo[i].name);
+            free(args->states);
         }
         free(args->philo);
     }

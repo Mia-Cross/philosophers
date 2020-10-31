@@ -8,14 +8,13 @@ void *philo_life(void *arg)
 	update_death_clock(&philo->death, philo->time->to_die);
     while (philo->quit)
     {
-        //if (!(sem_wait(philo->forks)))
 		sem_wait(philo->forks);
 			//perror(strerror(errno));
 		display_action(philo, "has taken a fork\n");
 		sem_wait(philo->forks);
 		display_action(philo, "has taken a fork\n");
-	//	sem_wait(philo->state);
-      //  sem_post(philo->state);
+		sem_wait(philo->state);
+        sem_post(philo->state);
     	update_death_clock(&philo->death, philo->time->to_die);
 		display_action(philo, "is eating\n");
 		if (philo->laps_left > 0)
@@ -50,7 +49,7 @@ void *simulation_control(void *arg)
 			}
 			if (check_death_clock(args->philo[i].death))
 			{
-			//	sem_wait(args->philo[i].state);
+				sem_wait(args->philo[i].state);
 				display_action(&args->philo[i], "died\n");
 				args->quit = 0;
 			}

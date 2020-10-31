@@ -49,6 +49,8 @@ void get_arguments(int ac, char **av, t_args *args)
 		clean_and_exit(args, 0, err);
     if (!(args->philo = malloc(sizeof(t_philo) * args->nb_philo)))
 		clean_and_exit(args, 0, "Malloc in philo_tab failed...");
+    if (!(args->states = malloc(sizeof(sem_t *) * args->nb_philo)))
+        clean_and_exit(args, 1, "Malloc in states_tab failed...");
 }
 
 void display_action(t_philo *philo, char *action)

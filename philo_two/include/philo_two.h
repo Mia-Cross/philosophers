@@ -45,6 +45,7 @@ typedef struct s_args
     pthread_t   control;
     sem_t       *forks;
     sem_t       *channel;
+    sem_t       **states;
 }              t_args;
 
 void start_philo_threads(t_args *args);
