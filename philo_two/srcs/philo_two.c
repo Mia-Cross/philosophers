@@ -8,8 +8,8 @@ void *philo_life(void *arg)
 	update_death_clock(&philo->death, philo->time->to_die);
     while (philo->quit)
     {
+    	write(1, "#", 1);
 		sem_wait(philo->forks);
-			//perror(strerror(errno));
 		display_action(philo, "has taken a fork\n");
 		sem_wait(philo->forks);
 		display_action(philo, "has taken a fork\n");
@@ -35,9 +35,10 @@ void *simulation_control(void *arg)
 	int i;
 
 	args = (t_args *)arg;
+	usleep(args->time.to_die - 1000);
 	while (args->quit)
 	{
-		usleep(10);
+		usleep(1000);
 		i = -1;
 		while (++i < args->nb_philo && args->quit)
 		{
@@ -52,10 +53,20 @@ void *simulation_control(void *arg)
 				sem_wait(args->philo[i].state);
 				display_action(&args->philo[i], "died\n");
 				args->quit = 0;
+				sem_post(args->philo[i].state);
 			}
 		}
 	}
 	return (NULL);
+}
+
+void detach_philo_threads(t_args *args)
+{
+	int i;
+
+	i = -1;
+	while (++i < args->nb_philo)
+		pthread_detach(args->philo[i].thread);
 }
 
 int main(int ac, char **av)
@@ -65,9 +76,9 @@ int main(int ac, char **av)
     get_arguments(ac, av, &args);
     start_semaphores(&args);
     start_philo_threads(&args);
-  //  write(1, "1", 1);
     pthread_create(&args.control, NULL, &simulation_control, &args);
     pthread_join(args.control, NULL);
+	detach_philo_threads(&args);
     clean_and_exit(&args, 2, "bye\n");
     return (0);
 }

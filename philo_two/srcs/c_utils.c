@@ -12,6 +12,15 @@
 
 #include "philo_two.h"
 
+void ft_usleep(unsigned long usec)
+{
+	unsigned long u;
+
+	u = -1;
+	while (++u < usec)
+		usleep(1);
+}
+
 int ft_strlen(char *str)
 {
     int i;

@@ -91,17 +91,17 @@ void destroy_semaphores(t_args *args)
 
     errno = 0;
     sem_unlink("forks");
-    perror(strerror(errno));
+    //perror(strerror(errno));
     errno = 0;
     sem_unlink("channel");
-    perror(strerror(errno));
+    //perror(strerror(errno));
     i = -1;
     while (++i < args->nb_philo)
     {
         lol = ft_itoa(i + 1);
         errno = 0;
         sem_unlink(lol);
-        perror(strerror(errno));
+        //perror(strerror(errno));
         free(lol);
     }
 }

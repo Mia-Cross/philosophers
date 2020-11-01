@@ -8,7 +8,8 @@ void start_philo_threads(t_args *args)
 	gettimeofday(&args->time.start, NULL);
 	while (++i < args->nb_philo)
 	{
-		memset(&args->philo[i], 0, sizeof(t_philo));
+        write(1, "?", 1);
+		memset(&args->philo[i], '\0', sizeof(t_philo));
         args->philo[i].name = ft_itoa(i + 1);
         args->philo[i].time = &args->time;
         args->philo[i].laps_left = args->nb_laps;
@@ -16,10 +17,10 @@ void start_philo_threads(t_args *args)
         args->philo[i].forks = args->forks;
 		args->philo[i].channel = args->channel;
         errno = 0;
-        args->states[i] = sem_open(args->philo[i].name, O_CREAT, 0777, 1);
+        if (!(args->philo[i].state = sem_open(args->philo[i].name, O_CREAT, 0777, 1)))
+            clean_and_exit(args, 2, "Failed to open semaphore : state");
         perror(strerror(errno));
-        args->philo[i].state = args->states[i];
-        //usleep(200);
+     //   usleep(200);
 		pthread_create(&args->philo[i].thread, NULL, &philo_life, &args->philo[i]);
 	}
 }
@@ -27,31 +28,42 @@ void start_philo_threads(t_args *args)
 void destroy_semaphores(t_args *args)
 {
     int i;
-    (void)args;
 
-    errno = 0;
+    sem_close(args->forks);
     sem_unlink("forks");
-    perror(strerror(errno));
-    errno = 0;
+    sem_close(args->channel);
     sem_unlink("channel");
-    perror(strerror(errno));
     i = -1;
     while (++i < args->nb_philo)
     {
-        errno = 0;
+        sem_close(args->philo[i].state);
         sem_unlink(args->philo[i].name);
-        perror(strerror(errno));
     }
+}
+
+void unlink_semaphores(t_args *args)
+{
+    int i;
+
+    sem_unlink("forks");
+    sem_unlink("channel");
+    i = -1;
+    while (++i < args->nb_philo)
+        sem_unlink(args->philo[i].name);
 }
 
 void start_semaphores(t_args *args)
 {
- //   destroy_semaphores(args);
     errno = 0;
-    args->forks = sem_open("forks", O_CREAT, 0777, args->nb_philo);
+ //   unlink_semaphores(args);
     perror(strerror(errno));
     errno = 0;
-    args->channel = sem_open("channel", O_CREAT, 0777, 1);
+    if (!(args->forks = sem_open("forks", O_CREAT, 0777, args->nb_philo)))
+        clean_and_exit(args, 1, "Failed to open semaphore : forks");
+    perror(strerror(errno));
+    errno = 0;
+    if (!(args->channel = sem_open("channel", O_CREAT, 0777, 1)))
+        clean_and_exit(args, 2, "Failed to open semaphore : channel");
     perror(strerror(errno));
 }
 
@@ -63,13 +75,15 @@ int clean_and_exit(t_args *args, int to_free, char *str)
     {
 	    if (to_free > 1)
         {
-            usleep(100);
+        //    usleep(100);
             destroy_semaphores(args);
             i = -1;
             while (++i < args->nb_philo)
                 free(args->philo[i].name);
-            free(args->states);
+         //   free(args->states);
         }
+        else
+            sem_close(args->forks);
         free(args->philo);
     }
     write(2, str, ft_strlen(str));

@@ -45,7 +45,7 @@ typedef struct s_args
     pthread_t   control;
     sem_t       *forks;
     sem_t       *channel;
-    sem_t       **states;
+ //   sem_t       **states;
 }              t_args;
 
 void start_philo_threads(t_args *args);
@@ -61,5 +61,6 @@ void destroy_mutexes(t_args *args);
 int ft_strlen(char *str);
 unsigned long ft_atoi_ulong(char *str);
 char	*ft_itoa(unsigned long nbr);
+void ft_usleep(unsigned long usec);
 
 #endif
