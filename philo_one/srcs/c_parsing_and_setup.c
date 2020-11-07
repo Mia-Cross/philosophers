@@ -34,7 +34,7 @@ char *check_args(char **av, t_args *args)
     }
 	else
 		args->nb_laps = -1;
-	args->quit = args->nb_philo - 1;
+	args->quit = args->nb_philo;
     return (NULL);
 }
 
@@ -57,7 +57,7 @@ void display_action(t_philo *philo, char *action)
 {
     char *time;
 
-    if (philo->channel == NULL)
+    if (*philo->quit == 0)
         return ;
     time = ft_itoa(get_time_since_start(philo->time->start));
 	pthread_mutex_lock(philo->channel);
@@ -66,7 +66,6 @@ void display_action(t_philo *philo, char *action)
 	write(1, philo->name, ft_strlen(philo->name));
 	write(1, " ", 1);
     write(1, action, ft_strlen(action));
-    if (!(ft_strlen(action) == 5 || (ft_strlen(action) == 10 && !philo->quit)))
-        pthread_mutex_unlock(philo->channel);
+    pthread_mutex_unlock(philo->channel);
     free(time);
 }

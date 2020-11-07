@@ -42,9 +42,9 @@ int check_death_clock(t_timeval death_time)
 
     gettimeofday(&now, NULL);
     if (now.tv_sec > death_time.tv_sec)
-        return (1);
+        return (0);
     if (now.tv_sec == death_time.tv_sec && now.tv_usec >= death_time.tv_usec)
-        return (1);
-    return(0);
+        return (0);
+    return(1);
 }
 
