@@ -1,53 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_itoa.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lemarabe <lemarabe@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 18:54:24 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/09/08 20:28:00 by lemarabe         ###   ########.fr       */
+/*   Updated: 2020/11/08 15:13:34 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_two.h"
 
-void ft_usleep(unsigned long usec)
-{
-	unsigned long u;
-
-	u = -1;
-	while (++u < usec)
-		usleep(1);
-}
-
-int ft_strlen(char *str)
-{
-    int i;
-
-    i = 0;
-    while (str[i])
-        i++;
-    return (i);
-}
-
-unsigned long ft_atoi_ulong(char *str)
-{
-    unsigned long out;
-    int i;
-    
-    i = 0;
-    out = 0;
-    while (str[i] && str[i] <= '9' && str[i] >= '0')
-        out = out * 10 + str[i++] - '0';
-    return (out);
-}
-
 static int		nbr_len(unsigned long p)
 {
 	int		i;
 
-    if (p == 0)
+	if (p == 0)
 		return (1);
 	i = 0;
 	while (p)

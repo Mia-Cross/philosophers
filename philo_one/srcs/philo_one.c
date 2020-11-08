@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 18:30:38 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/11/07 02:42:29 by user42           ###   ########.fr       */
+/*   Updated: 2020/11/08 19:08:47 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	display_action(t_philo *philo, char *action)
 	free(time);
 }
 
-void	*simulation_control(void *arg)
+void	*philo_control(void *arg)
 {
 	t_philo	*philo;
 

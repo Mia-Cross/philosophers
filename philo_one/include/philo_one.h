@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 18:53:21 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/11/07 02:56:15 by user42           ###   ########.fr       */
+/*   Updated: 2020/11/08 19:08:47 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void					set_philosophers(t_args *args);
 void					start_mutexes(t_args *args);
 void					start_threads(t_args *args);
 void					*philo_life(void *arg);
-void					*simulation_control(void *arg);
+void					*philo_control(void *arg);
 void					wait_for_all_threads(t_args *args);
 int						check_death_clock(t_timeval death_time);
 void					update_death_clock(t_timeval *death, time_t to_die);

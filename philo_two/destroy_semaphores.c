@@ -1,5 +1,30 @@
 #include "include/philo_two.h"
 
+int ft_strlen(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
+
+char *semaphore_name(char *number)
+{
+    char *sem_name;
+    int i;
+
+    if (!(sem_name = malloc(sizeof(char) * (ft_strlen(number) + 1) + 1)))
+        return (NULL);
+    sem_name[0] = '/';
+    i = -1;
+    while (number[++i] && i < 8)
+        sem_name[i + 1] = number[i];
+    sem_name[i + 1] = '\0';
+    free(number);
+    return (sem_name);
+}
 
 unsigned long ft_atoi_ulong(char *str)
 {
@@ -83,6 +108,7 @@ char			*ft_itoa(unsigned long nbr)
 	return (ft_strrev(str));
 }
 
+
 void destroy_semaphores(t_args *args)
 {
     int i;
@@ -90,18 +116,18 @@ void destroy_semaphores(t_args *args)
     char *lol;
 
     errno = 0;
-    sem_unlink("forks");
-    //perror(strerror(errno));
-    errno = 0;
-    sem_unlink("channel");
-    //perror(strerror(errno));
+    sem_unlink("/forks");
+    perror(strerror(errno));
+	errno = 0;
+    sem_unlink("/channel");
+    perror(strerror(errno));
     i = -1;
     while (++i < args->nb_philo)
     {
-        lol = ft_itoa(i + 1);
+        lol = semaphore_name(ft_itoa(i + 1));
         errno = 0;
         sem_unlink(lol);
-        //perror(strerror(errno));
+        perror(strerror(errno));
         free(lol);
     }
 }

@@ -6,11 +6,11 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:16:50 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/11/08 19:37:32 by user42           ###   ########.fr       */
+/*   Updated: 2020/11/08 19:34:54 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
 char	*check_args(char **av, t_args *args)
 {
@@ -38,34 +38,43 @@ char	*check_args(char **av, t_args *args)
 	return (NULL);
 }
 
-void	get_arguments(int ac, char **av, t_args *args)
+void get_arguments(int ac, char **av, t_args *args)
 {
-	char	*err;
-
-	if (!(ac == 5 || ac == 6))
-		clean_and_exit(args, 0, "Wrong number of parameters !");
-	memset(args, 0, sizeof(t_args));
+    char    *err;
+    int i;
+    
+    if (!(ac == 5 || ac == 6))
+        clean_and_exit(args, 0, "Wrong number of parameters !");
+    memset(args, '\0', sizeof(t_args));
 	if ((err = check_args(av, args)) && err)
 		clean_and_exit(args, 0, err);
-	if (!(args->forks = malloc(sizeof(pthread_mutex_t) * args->nb_philo)))
-		clean_and_exit(args, 0, "Malloc in forks_tab failed...");
-	if (!(args->philo = malloc(sizeof(t_philo) * args->nb_philo)))
-		clean_and_exit(args, 1, "Malloc in philo_tab failed...");
+    if (!(args->philo = malloc(sizeof(t_philo) * args->nb_philo)))
+		clean_and_exit(args, 0, "Malloc in philo_tab failed...");
+    i = -1;
+    while (++i < args->nb_philo)
+    {
+        memset(&args->philo[i], '\0', sizeof(t_philo));
+        args->philo[i].name = semaphore_name(ft_itoa(i + 1));
+    }
 }
 
-void	start_mutexes(t_args *args)
+void start_semaphores(t_args *args)
 {
-	int	i;
+    int i;
 
-	pthread_mutex_init(&args->channel, NULL);
-	pthread_mutex_init(&args->forks[args->nb_philo - 1], NULL);
-	i = -1;
-	while (++i < args->nb_philo - 1)
-	{
-		pthread_mutex_init(&args->forks[i], NULL);
-		pthread_mutex_init(&args->philo[i].state, NULL);
-	}
-	pthread_mutex_init(&args->philo[i].state, NULL);
+    args->forks = open_new_semaphore("/forks", args->nb_philo);
+    if (!args->forks)
+        clean_and_exit(args, 1, "Failed to open semaphore : forks");
+    args->channel = open_new_semaphore("/channel", 1);
+    if (!args->channel)
+        clean_and_exit(args, 2, "Failed to open semaphore : channel");
+    i = -1;
+    while (++i < args->nb_philo)
+    {
+        args->philo[i].state = open_new_semaphore(args->philo[i].name, 1);
+        if (!args->philo[i].state)
+            clean_and_exit(args, (i + 3), "Failed to open semaphore : state");
+    }
 }
 
 void	set_philosophers(t_args *args)
@@ -75,17 +84,11 @@ void	set_philosophers(t_args *args)
 	i = -1;
 	while (++i < args->nb_philo)
 	{
-		memset(&args->philo[i], 0, sizeof(t_philo));
-		args->philo[i].name = ft_itoa(i + 1);
-		args->philo[i].time = &args->time;
-		args->philo[i].laps_left = args->nb_laps;
+        args->philo[i].time = &args->time;
+        args->philo[i].laps_left = args->nb_laps;
 		args->philo[i].quit = &args->quit;
-		args->philo[i].channel = &args->channel;
-		args->philo[i].fork_left = &args->forks[i];
-		if (i > 0)
-			args->philo[i].fork_right = &args->forks[i - 1];
-		else
-			args->philo[i].fork_right = &args->forks[args->nb_philo - 1];
+        args->philo[i].forks = args->forks;
+		args->philo[i].channel = args->channel;
 	}
 }
 

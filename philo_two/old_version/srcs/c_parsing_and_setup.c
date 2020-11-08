@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_and_exit.c                                 :+:      :+:    :+:   */
+/*   c_parsing_and_setup.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lemarabe <lemarabe@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:16:50 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/09/08 20:48:44 by lemarabe         ###   ########.fr       */
+/*   Updated: 2020/11/08 19:15:58 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,14 @@ char *check_args(char **av, t_args *args)
     }
 	else
 		args->nb_laps = -1;
-	args->quit = args->nb_philo - 1;
+	args->quit = args->nb_philo;
     return (NULL);
 }
 
 void get_arguments(int ac, char **av, t_args *args)
 {
     char    *err;
+    int i;
     
     if (!(ac == 5 || ac == 6))
         clean_and_exit(args, 0, "Wrong number of parameters !");
@@ -49,8 +50,12 @@ void get_arguments(int ac, char **av, t_args *args)
 		clean_and_exit(args, 0, err);
     if (!(args->philo = malloc(sizeof(t_philo) * args->nb_philo)))
 		clean_and_exit(args, 0, "Malloc in philo_tab failed...");
-   // if (!(args->states = malloc(sizeof(sem_t *) * args->nb_philo)))
-     //   clean_and_exit(args, 1, "Malloc in states_tab failed...");
+    i = -1;
+    while (++i < args->nb_philo)
+    {
+        memset(&args->philo[i], '\0', sizeof(t_philo));
+        args->philo[i].name = semaphore_name(ft_itoa(i + 1));
+    }
 }
 
 void display_action(t_philo *philo, char *action)
@@ -63,10 +68,9 @@ void display_action(t_philo *philo, char *action)
 	sem_wait(philo->channel);
 	write(1, time, ft_strlen(time));
 	write(1, " ", 1);
-	write(1, philo->name, ft_strlen(philo->name));
+	write(1, (philo->name + 1), (ft_strlen(philo->name) - 1));
 	write(1, " ", 1);
     write(1, action, ft_strlen(action));
-    //if (!(ft_strlen(action) == 5 || (ft_strlen(action) == 10 && !philo->quit)))
     sem_post(philo->channel);
     free(time);
 }

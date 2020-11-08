@@ -36,15 +36,34 @@ time_t get_time_since_start(t_timeval start)
 }
 
 
-int check_death_clock(t_timeval death_time)
+int check_death_clock(t_timeval death_time, sem_t *channel)
 {
 	t_timeval now;
+	(void)channel;
+//	char *usec;
+//	char *sec;
 
     gettimeofday(&now, NULL);
+/*	sec = ft_itoa(now.tv_sec);
+	usec = ft_itoa(now.tv_usec);
+	sem_wait(channel);
+	write(1, sec, ft_strlen(sec));
+	write(1, ",", 1);
+	write(1, usec, ft_strlen(usec));
+	sec = ft_itoa(death_time.tv_sec);
+	usec = ft_itoa(death_time.tv_usec);
+	write(1, ":", 1);
+	write(1, sec, ft_strlen(sec));
+	write(1, ",", 1);
+	write(1, usec, ft_strlen(usec));
+	write(1, "\n", 1);
+	sem_post(channel);
+	free(sec);
+	free(usec); */
     if (now.tv_sec > death_time.tv_sec)
-        return (1);
+        return (0);
     if (now.tv_sec == death_time.tv_sec && now.tv_usec >= death_time.tv_usec)
-        return (1);
-    return(0);
+        return (0);
+    return(1);
 }
 

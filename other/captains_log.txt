@@ -27,6 +27,8 @@ LES MUTEXES APPARTIENNENT A DES THREADS !
 DONC FAUT FAIRE ATTENTION AU NIVEAU DE PROGRAMME DANS
 LEQUEL JE SUIS QUAND JE LOCKE UN MUTEX ! 
 
+segfault parce que sim_control en T2 accede a un t_philo alors qu'il a été free par T0
+
 
 
 ///////////////////////////////////////////////////////////////////////////
