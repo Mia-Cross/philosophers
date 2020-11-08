@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2020/11/08 20:26:32 by user42            #+#    #+#              #
+#    Updated: 2020/11/08 20:26:45 by user42           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = philo_one
 
 SRCDIR =	srcs
@@ -13,7 +25,7 @@ SRCS = 	philo_one.c \
 OBJS =	$(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 DPDCS =	$(OBJS:.o=.d)
 
-CFLAGS = -Wall -Wextra -Werror -pthread #-fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror -pthread
 
 opti:
 	@make -j all
