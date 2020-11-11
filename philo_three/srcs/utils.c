@@ -6,11 +6,11 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 02:25:24 by user42            #+#    #+#             */
-/*   Updated: 2020/11/08 15:13:34 by user42           ###   ########.fr       */
+/*   Updated: 2020/11/08 23:55:49 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_two.h"
+#include "philo_three.h"
 
 int				ft_strlen(char *str)
 {

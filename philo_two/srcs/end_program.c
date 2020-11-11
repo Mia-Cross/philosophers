@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 19:50:07 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/11/08 20:18:55 by user42           ###   ########.fr       */
+/*   Updated: 2020/11/09 23:28:52 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ void	destroy_semaphores(t_args *args, int nb_philo)
 
 int		clean_and_exit(t_args *args, int to_free, char *str)
 {
+	int i;
+
 	if (to_free)
 	{
 		if (to_free == 1)
@@ -56,6 +58,9 @@ int		clean_and_exit(t_args *args, int to_free, char *str)
 			destroy_semaphores(args, 1);
 		if (to_free > 2)
 			destroy_semaphores(args, (to_free - 3));
+		i = -1;
+		while (++i < args->nb_philo)
+			free(args->philo[i].name);
 		free(args->philo);
 	}
 	write(2, str, ft_strlen(str));
