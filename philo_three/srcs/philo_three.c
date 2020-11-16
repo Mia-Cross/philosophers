@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 18:30:38 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/11/11 03:41:49 by user42           ###   ########.fr       */
+/*   Updated: 2020/11/16 16:32:57 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void	*philo_control(void *arg)
 		sem_wait(philo->state);
 		if (check_death_clock(philo->death))
 		{
-			//write(1, "*", 1);
 			sem_post(philo->state);
 			usleep(2000);
 		}
@@ -54,15 +53,14 @@ void	*philo_control(void *arg)
 		}
 	}
 	return (NULL);
-	//exit(0);
 }
 
 void	eat_if_allowed(t_philo *philo)
 {
 	sem_wait(philo->state);
-	display_action(philo, "is eating\n");
 	if (check_death_clock(philo->death))
 		update_death_clock(&philo->death, philo->time.to_die);
+	display_action(philo, "is eating\n");
 	sem_post(philo->state);
 }
 
@@ -82,8 +80,6 @@ void	*philo_life(void *arg)
 			philo->laps_left -= 1;
 		if (!philo->laps_left)
 			sem_post(philo->full);
-		//if (!strcmp(philo->name, "/1"))
-		//	write(1, "@", 1);
 		usleep(philo->time.to_eat);
 		sem_post(philo->forks);
 		sem_post(philo->forks);
@@ -101,7 +97,7 @@ int		main(int ac, char **av)
 	get_arguments(ac, av, &args);
 	unlink_previous_semaphores(&args);
 	start_semaphores(&args);
-	start_threads(&args);
+	start_all_processes(&args);
 	clean_and_exit(&args, (args.nb_philo + 5), "");
 	return (0);
 }

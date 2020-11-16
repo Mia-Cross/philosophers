@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 03:02:00 by user42            #+#    #+#             */
-/*   Updated: 2020/11/11 01:02:26 by user42           ###   ########.fr       */
+/*   Updated: 2020/11/16 17:56:09 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,18 +67,17 @@ char					*semaphore_name(char *name);
 void					unlink_previous_semaphores(t_args *args);
 sem_t					*open_new_semaphore(char *name, int value);
 void					start_semaphores(t_args *args);
-void					set_philosopher(t_args *args);
-void					start_threads(t_args *args);
+void					start_all_processes(t_args *args);
+void					start_death_monitoring(t_args *args, pid_t *pid, int i);
+void					start_lap_monitoring(t_args *args, pid_t *pid, int i);
 void					*philo_life(void *arg);
 void					*philo_control(void *arg);
-void					*wait_end_signal(void *arg);
-void					*wait_death_signal(void *arg);
+void					wait_for_philo_thread(t_args *args);
+int						clean_and_exit(t_args *args, int to_free, char *str);
 void					update_death_clock(t_timeval *death, time_t to_die);
 int						check_death_clock(t_timeval death_time);
 time_t					get_time_since_start(t_timeval start);
 void					display_action(t_philo *philo, char *action);
-void					wait_for_all_threads(t_args *args);
-int						clean_and_exit(t_args *args, int to_free, char *str);
 int						ft_strlen(char *str);
 unsigned long			ft_atoi_ulong(char *str);
 char					*ft_itoa(unsigned long nbr);

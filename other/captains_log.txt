@@ -29,6 +29,21 @@ LEQUEL JE SUIS QUAND JE LOCKE UN MUTEX !
 
 segfault parce que sim_control en T2 accede a un t_philo alors qu'il a été free par T0
 
+PHILO_THREE :
+> PARENT PROCESS :
+1) Malloc de args->pids (pid_t *)
+2) Sem_open "forks"
+3) Sem_open "channel"
+4) Sem_open "quit"
+5) Sem_open "full"
+> FORK : PHILO PROCESS :
+6) malloc de args->philo.name
+7) sem_open "state/name"
+#wait_for_philo_thread
+> FORK : MONITORING PROCESSES :
+#clean_and_exit(idem parent)
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////

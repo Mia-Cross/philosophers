@@ -6,7 +6,7 @@
 #    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/08 20:26:13 by user42            #+#    #+#              #
-#    Updated: 2020/11/10 00:46:58 by user42           ###   ########.fr        #
+#    Updated: 2020/11/16 17:52:02 by user42           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ SRCS =	philo_three.c \
 		utils.c \
 		utils_itoa.c \
 		utils_semaphore.c \
+		monitoring.c \
 		parsing_and_setup.c
 
 OBJS =	$(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
