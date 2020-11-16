@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:16:50 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/11/15 21:11:20 by user42           ###   ########.fr       */
+/*   Updated: 2020/11/16 18:35:26 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,19 +92,28 @@ void	set_philosophers(t_args *args)
 void	start_threads(t_args *args)
 {
 	int	i;
-	time_t wait;
 
 	i = -1;
-	wait = 5000;
-	while (wait > 1000 && wait * args->nb_philo >= args->time.to_die)
-		wait -= 1000;
 	gettimeofday(&args->time.start, NULL);
 	while (++i < args->nb_philo)
 	{
-		pthread_create(&args->philo[i].thread, NULL, &philo_life,
-			&args->philo[i]);
-		pthread_create(&args->philo[i].control, NULL, &philo_control,
-			&args->philo[i]);
-		usleep(wait);
+		if (!(i % 2))
+		{
+			pthread_create(&args->philo[i].thread, NULL, &philo_life,
+				&args->philo[i]);
+			pthread_create(&args->philo[i].control, NULL, &philo_control,
+				&args->philo[i]);
+		}
+	}
+	usleep(args->time.to_eat);
+	while (--i)
+	{
+		if (i % 2)
+		{
+			pthread_create(&args->philo[i].thread, NULL, &philo_life,
+				&args->philo[i]);
+			pthread_create(&args->philo[i].control, NULL, &philo_control,
+				&args->philo[i]);
+		}
 	}
 }
