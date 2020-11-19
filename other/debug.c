@@ -67,37 +67,3 @@ void ft_putunsigned_long(time_t nbr)
 	c = nbr % 10 + '0';
 	write(1, &c, 1);
 }
-
-/* void philosopher_eats(t_philo *philo)
-{
-//    if (check_death_clock(philo->death))
-//	{
-  //  	display_action(philo->time->start, philo->name, "died in\n");
-   //     return ;
-   // }
-	display_action(philo->time->start, philo->name, "is eating\n");
-    update_death_clock(&philo->death, philo->time->to_die);
-	usleep(philo->time->to_eat);
-	pthread_mutex_unlock(philo->fork_left);
-	pthread_mutex_unlock(philo->fork_right);
-    if (philo->laps_left > 0)
-		philo->laps_left -= 1;
-    if (!philo->laps_left)
-        return ;
-}
-
-
-void philosopher_sleeps(t_philo *philo)
-{
-    display_action(philo->time->start, philo->name, "is sleeping\n");
-    usleep(philo->time->to_sleep);
-}
-
-void philosopher_thinks(t_philo *philo)
-{
-    display_action(philo->time->start, philo->name, "is thinking\n");
-	pthread_mutex_lock(philo->fork_left);
-	display_action(philo->time->start, philo->name, "has taken a fork\n");
-	pthread_mutex_lock(philo->fork_right);
-	display_action(philo->time->start, philo->name, "has taken a fork\n");
-} */

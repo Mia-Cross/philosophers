@@ -94,8 +94,8 @@ void	set_philosophers(t_args *args)
 
 void	start_threads(t_args *args)
 {
-	int	i;
-	time_t wait;
+	int		i;
+	time_t	wait;
 
 	i = -1;
 	wait = 5000;

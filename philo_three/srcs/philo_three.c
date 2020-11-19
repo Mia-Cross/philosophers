@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 18:30:38 by lemarabe          #+#    #+#             */
-/*   Updated: 2020/11/16 16:32:57 by user42           ###   ########.fr       */
+/*   Updated: 2020/11/16 18:51:31 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ void	display_action(t_philo *philo, char *action)
 	write(1, (philo->name + 1), (ft_strlen(philo->name) - 1));
 	write(1, " ", 1);
 	write(1, action, ft_strlen(action));
-	sem_post(philo->channel);
+	if (ft_strlen(action) != 5)
+		sem_post(philo->channel);
 	free(time);
 }
 
